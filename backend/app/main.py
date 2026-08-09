@@ -5,14 +5,32 @@ from app.db.database import database
 
 from app.api.ships import router as ships_router
 
+from contextlib import asynccontextmanager
+from app.db.startup import create_indexes
+
+from app.api.vessels_external import router as vessels_external_router
+from app.api.ingestion import router as ingestion_router
+
+
+@asynccontextmanager
+async def lifespan(app):
+
+    await create_indexes()
+
+    yield
+
+
 app = FastAPI(
     title="OceanEye API",
     description="Maritime Traffic Monitoring and Prediction System",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
 
 app.include_router(ships_router)
 app.include_router(ais_router)
+app.include_router(vessels_external_router)
+app.include_router(ingestion_router)
 
 @app.get("/")
 async def root():

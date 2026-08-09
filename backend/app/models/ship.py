@@ -8,19 +8,20 @@ class Ship(BaseModel):
     mmsi: str
 
     ship_name: Optional[str] = None
-
     ship_type: Optional[str] = None
 
     status: Optional[str] = None
 
     latitude: float
-
     longitude: float
 
     speed: Optional[float] = None
-
     course: Optional[float] = None
 
     destination: Optional[str] = None
 
-    timestamp: datetime
+    message_type: Optional[str] = None
+    
+    source: str = "AISStream"
+    
+    last_seen: datetime
