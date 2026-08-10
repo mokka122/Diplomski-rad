@@ -1,14 +1,10 @@
 from abc import ABC, abstractmethod
+from collections.abc import AsyncIterator
 
 
 class DataProvider(ABC):
 
     @abstractmethod
-    async def get_vessels_in_area(
-        self,
-        lon_left: float,
-        lon_right: float,
-        lat_bottom: float,
-        lat_top: float,
-    ):
-        pass
+    def stream_messages(self) -> AsyncIterator[dict]:
+        """Yield raw AIS messages from the provider."""
+        raise NotImplementedError
