@@ -1,0 +1,1084 @@
+:root {
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  color: #1a2a33;
+  background: #f5f7f8;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #f5f7f8;
+}
+
+button {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================================
+   APP / HEADER
+   ========================================================= */
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-header {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  min-height: 84px;
+  padding: 16px 28px;
+
+  border-bottom: 1px solid #e3eaed;
+
+  background: #ffffff;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+
+  text-decoration: none;
+}
+
+.logo-slot {
+  display: flex;
+
+  width: 190px;
+  height: 52px;
+
+  align-items: center;
+  justify-content: flex-start;
+
+  overflow: hidden;
+
+  background: transparent;
+}
+
+.logo-slot img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+  object-position: left center;
+}
+
+/* =========================================================
+   DESKTOP NAVIGATION
+   ========================================================= */
+
+.main-navigation {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+  margin-left: auto;
+}
+
+.nav-link {
+  padding: 9px 12px;
+
+  border-radius: 8px;
+
+  color: #5d7079;
+
+  font-size: 0.84rem;
+  font-weight: 750;
+
+  text-decoration: none;
+
+  transition:
+    color 160ms ease,
+    background 160ms ease;
+}
+
+.nav-link:hover {
+  color: #16898b;
+  background: #effafa;
+}
+
+.nav-link.router-link-active {
+  color: #087174;
+  background: #effafa;
+}
+
+/* =========================================================
+   HEADER ACTIONS
+   ========================================================= */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+}
+
+.live-status {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color: #24804e;
+
+  font-size: 0.84rem;
+  font-weight: 750;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #38b96b;
+
+  box-shadow:
+    0 0 0 4px #dff7e7;
+}
+
+.refresh-button {
+  cursor: pointer;
+
+  border: 1px solid #cce6e6;
+  border-radius: 9px;
+
+  padding: 10px 14px;
+
+  color: #087174;
+  background: #effafa;
+
+  font-weight: 750;
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease;
+}
+
+.refresh-button:hover:not(:disabled) {
+  background: #dff5f5;
+}
+
+.refresh-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+/* =========================================================
+   MOBILE MENU
+   ========================================================= */
+
+.menu-button {
+  display: none;
+
+  cursor: pointer;
+
+  width: 42px;
+  height: 42px;
+
+  place-content: center;
+  gap: 5px;
+
+  border: 1px solid #dce7ea;
+  border-radius: 9px;
+
+  background: #ffffff;
+}
+
+.menu-button span {
+  display: block;
+
+  width: 18px;
+  height: 2px;
+
+  border-radius: 2px;
+
+  background: #31505b;
+}
+
+/* =========================================================
+   MOBILE NAVIGATION DROPDOWN
+   ========================================================= */
+
+.mobile-navigation {
+  position: absolute;
+  z-index: 1100;
+
+  top: calc(100% + 1px);
+  right: 18px;
+
+  display: flex;
+  flex-direction: column;
+
+  min-width: 180px;
+
+  padding: 8px;
+
+  border: 1px solid #e0e8eb;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 12px 28px rgb(27 54 66 / 14%);
+}
+
+.mobile-nav-link {
+  padding: 11px 12px;
+
+  border-radius: 7px;
+
+  color: #526873;
+
+  font-size: 0.84rem;
+  font-weight: 700;
+
+  text-decoration: none;
+}
+
+.mobile-nav-link:hover,
+.mobile-nav-link.router-link-active {
+  color: #087174;
+  background: #effafa;
+}
+
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
+
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+
+  min-height: calc(100vh - 84px);
+}
+
+.map-panel {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+
+  padding: 28px;
+}
+
+.map-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 18px;
+}
+
+.map-panel-header h2 {
+  margin: 0 0 6px;
+
+  color: #1a2a33;
+
+  font-size: 1.1rem;
+}
+
+.map-panel-header p {
+  margin: 0;
+
+  color: #72818a;
+
+  font-size: 0.88rem;
+}
+
+.map-statistics {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.map-statistics strong {
+  color: #16898b;
+
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.map-statistics span {
+  margin-top: 4px;
+
+  color: #71818a;
+
+  font-size: 0.76rem;
+}
+
+/* =========================================================
+   MAP
+   ========================================================= */
+
+.vessel-map {
+  flex: 1;
+
+  min-height: 580px;
+
+  overflow: hidden;
+
+  border: 1px solid #e0e8eb;
+  border-radius: 14px;
+
+  background: #eaf1f1;
+
+  box-shadow:
+    0 8px 22px rgb(27 54 66 / 6%);
+}
+
+.map-message {
+  display: grid;
+
+  min-height: 580px;
+
+  place-items: center;
+
+  margin: 0;
+
+  border: 1px solid #e0e8eb;
+  border-radius: 14px;
+
+  color: #71818a;
+  background: #ffffff;
+}
+
+.error-message {
+  color: #b54141;
+}
+
+/* =========================================================
+   VESSEL MARKERS
+   ========================================================= */
+
+.vessel-marker-wrapper {
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.vessel-marker {
+  width: 34px;
+  height: 42px;
+
+  transform-origin: center;
+
+  filter:
+    drop-shadow(
+      0 2px 2px rgb(13 48 55 / 30%)
+    );
+}
+
+.vessel-marker svg {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+}
+
+/* =========================================================
+   VESSEL TOOLTIP
+   ========================================================= */
+
+.vessel-tooltip {
+  border: 1px solid #dbe6e9;
+  border-radius: 9px;
+
+  color: #40545e;
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 20px rgb(27 54 66 / 12%);
+}
+
+.vessel-tooltip::before {
+  border-top-color: #ffffff;
+}
+
+.vessel-tooltip-content {
+  display: grid;
+
+  gap: 4px;
+
+  min-width: 165px;
+
+  font-size: 0.75rem;
+}
+
+.vessel-tooltip-content strong {
+  margin-bottom: 3px;
+
+  color: #20343e;
+
+  font-size: 0.86rem;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #ffffff;
+}
+
+.leaflet-popup-content {
+  margin: 13px 15px;
+}
+
+/* =========================================================
+   VESSEL DETAILS
+   ========================================================= */
+
+.vessel-details-view {
+  min-width: 0;
+
+  padding: 24px;
+
+  border: 1px solid #e0e8eb;
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 22px rgb(27 54 66 / 6%);
+}
+
+.vessel-details-topbar {
+  margin-bottom: 20px;
+}
+
+.vessel-details-back {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 7px;
+
+  cursor: pointer;
+
+  padding: 0;
+
+  border: 0;
+
+  color: #16898b;
+  background: transparent;
+
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+
+.vessel-details-back:hover {
+  color: #087174;
+}
+
+.vessel-details-back span:first-child {
+  font-size: 1rem;
+}
+
+.vessel-details-hero {
+  padding-bottom: 20px;
+
+  border-bottom: 1px solid #e9eef0;
+}
+
+.vessel-details-hero h3 {
+  margin: 9px 0 4px;
+
+  color: #1a2a33;
+
+  font-size: 1.4rem;
+  line-height: 1.25;
+}
+
+.vessel-details-mmsi {
+  margin: 0;
+
+  color: #74838c;
+
+  font-size: 0.8rem;
+}
+
+/* =========================================================
+   VESSEL STATUS
+   ========================================================= */
+
+.vessel-status-card {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin: 18px 0 22px;
+
+  padding: 12px 14px;
+
+  border: 1px solid #dcefe4;
+  border-radius: 10px;
+
+  background: #f4fbf7;
+}
+
+.vessel-status-dot {
+  width: 8px;
+  height: 8px;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+
+  background: #38b96b;
+
+  box-shadow:
+    0 0 0 4px #dff7e7;
+}
+
+.vessel-status-card div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.vessel-status-card strong {
+  color: #286244;
+
+  font-size: 0.8rem;
+}
+
+.vessel-status-card span {
+  color: #71818a;
+
+  font-size: 0.72rem;
+}
+
+/* =========================================================
+   DETAIL GROUPS
+   ========================================================= */
+
+.details-group {
+  padding-top: 20px;
+
+  border-top: 1px solid #e9eef0;
+}
+
+.details-group + .details-group {
+  margin-top: 22px;
+}
+
+.details-group-label {
+  margin: 0 0 12px;
+
+  color: #16898b;
+
+  font-size: 0.68rem;
+  font-weight: 800;
+
+  letter-spacing: 0.1em;
+}
+
+/* =========================================================
+   MOVEMENT CARDS
+   ========================================================= */
+
+.details-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(0, 1fr)
+    );
+
+  gap: 12px;
+
+  margin: 0;
+}
+
+.detail-card {
+  min-width: 0;
+
+  padding: 14px;
+
+  border: 1px solid #e6edef;
+  border-radius: 10px;
+
+  background: #fafcfc;
+}
+
+.detail-card dt {
+  margin-bottom: 5px;
+
+  color: #7b8a92;
+
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.detail-card dd {
+  margin: 0;
+
+  overflow: hidden;
+
+  color: #29424d;
+
+  font-size: 1rem;
+  font-weight: 750;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.detail-card dd small {
+  color: #71818a;
+
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.detail-card dd.text-value {
+  font-size: 0.86rem;
+}
+
+/* =========================================================
+   POSITION DETAILS
+   ========================================================= */
+
+.details-list {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  gap: 12px;
+
+  margin: 0;
+}
+
+.details-list div {
+  padding: 12px 14px;
+
+  border: 1px solid #e6edef;
+  border-radius: 10px;
+
+  background: #fafcfc;
+}
+
+.details-list dt {
+  margin-bottom: 4px;
+
+  color: #7b8a92;
+
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.details-list dd {
+  margin: 0;
+
+  color: #344a55;
+
+  font-size: 0.82rem;
+}
+
+/* =========================================================
+   TRAJECTORY
+   ========================================================= */
+
+.trajectory-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  gap: 10px;
+}
+
+.trajectory-summary div {
+  min-width: 0;
+
+  padding: 12px;
+
+  border: 1px solid #e6edef;
+  border-radius: 10px;
+
+  background: #fafcfc;
+}
+
+.trajectory-summary span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #7b8a92;
+
+  font-size: 0.65rem;
+  font-weight: 700;
+
+  text-transform: uppercase;
+}
+
+.trajectory-summary strong {
+  color: #29424d;
+
+  font-size: 0.82rem;
+}
+
+.trajectory-summary small {
+  color: #71818a;
+
+  font-size: 0.65rem;
+}
+
+.trajectory-hint {
+  margin: 10px 0 0;
+
+  color: #778891;
+
+  font-size: 0.72rem;
+
+  line-height: 1.5;
+}
+
+.trajectory-state {
+  padding: 12px;
+
+  border: 1px solid #e6edef;
+  border-radius: 9px;
+
+  color: #778891;
+  background: #fafcfc;
+
+  font-size: 0.75rem;
+
+  line-height: 1.45;
+}
+
+.trajectory-error {
+  color: #a94a4a;
+
+  border-color: #efdada;
+
+  background: #fff9f9;
+}
+
+.trajectory-tooltip-content {
+  display: grid;
+
+  gap: 4px;
+
+  min-width: 150px;
+
+  font-size: 0.74rem;
+}
+
+.trajectory-tooltip-content strong {
+  margin-bottom: 2px;
+
+  color: #20343e;
+
+  font-size: 0.8rem;
+}
+
+/* =========================================================
+   ALL SHIPS
+   ========================================================= */
+
+.all-ships-page {
+  min-height: 100vh;
+
+  background: #f5f7f8;
+}
+
+.all-ships-content {
+  padding: 28px 36px 40px;
+}
+
+.all-ships-intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  margin-bottom: 24px;
+}
+
+.all-ships-intro h1 {
+  margin: 4px 0 6px;
+
+  color: #1a2a33;
+
+  font-size: 1.5rem;
+
+  letter-spacing: -0.03em;
+}
+
+.all-ships-intro > div:first-child > p:last-child {
+  margin: 0;
+
+  color: #72818a;
+
+  font-size: 0.88rem;
+}
+
+.all-ships-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  gap: 4px;
+
+  color: #71818a;
+
+  font-size: 0.78rem;
+}
+
+/* =========================================================
+   ALL SHIPS TABLE
+   ========================================================= */
+
+.all-ships-table-wrapper {
+  overflow: auto;
+
+  max-height: calc(100vh - 220px);
+
+  border: 1px solid #e0e8eb;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 22px rgb(27 54 66 / 6%);
+}
+
+.all-ships-table {
+  width: 100%;
+
+  min-width: 1000px;
+
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.all-ships-table th,
+.all-ships-table td {
+  padding: 12px 14px;
+
+  border-bottom: 1px solid #e9eef0;
+
+  text-align: left;
+
+  white-space: nowrap;
+}
+
+.all-ships-table th {
+  position: sticky;
+
+  top: 0;
+
+  z-index: 2;
+
+  color: #6f8089;
+  background: #fafcfc;
+
+  font-size: 0.68rem;
+  font-weight: 800;
+
+  letter-spacing: 0.05em;
+
+  text-transform: uppercase;
+}
+
+.all-ships-table td {
+  color: #4a5d66;
+
+  background: #ffffff;
+
+  font-size: 0.78rem;
+}
+
+.all-ships-table tbody tr:hover td {
+  background: #f6fbfb;
+}
+
+.all-ships-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.all-ships-table td:first-child strong {
+  color: #314853;
+
+  font-size: 0.8rem;
+}
+
+/* =========================================================
+   UTILITY
+   ========================================================= */
+
+.section-label,
+.sidebar-label {
+  margin: 0;
+
+  color: #16898b;
+
+  font-size: 0.68rem;
+  font-weight: 800;
+
+  letter-spacing: 0.1em;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+.dashboard-vessel-details {
+  scroll-margin-top: 24px;
+  margin-top: 24px;
+}
+
+@media (max-width: 900px) {
+  .app-header {
+    min-height: 76px;
+
+    padding: 14px 18px;
+  }
+
+  .main-navigation {
+    display: none;
+  }
+
+  .live-status {
+    display: none;
+  }
+
+  .menu-button {
+    display: grid;
+  }
+
+  .dashboard-content {
+    min-height: calc(100vh - 76px);
+  }
+
+  .map-panel {
+    padding: 18px;
+  }
+
+  .vessel-map,
+  .map-message {
+    min-height: calc(100vh - 210px);
+  }
+
+  .vessel-details-view {
+    margin: 0 18px 18px;
+
+    padding: 20px;
+  }
+
+  .all-ships-content {
+    padding: 18px;
+  }
+
+  .all-ships-intro {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 12px;
+  }
+
+  .all-ships-actions {
+    align-items: flex-start;
+  }
+
+  .all-ships-table-wrapper {
+    max-height: calc(100vh - 250px);
+  }
+
+  .details-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  .details-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .logo-slot {
+    width: 132px;
+    height: 40px;
+  }
+
+  .map-panel {
+    padding: 14px;
+  }
+
+  .map-panel-header {
+    margin-bottom: 14px;
+  }
+
+  .map-statistics strong {
+    font-size: 1.35rem;
+  }
+
+  .vessel-map,
+  .map-message {
+    min-height: calc(100vh - 190px);
+  }
+
+  .vessel-details-view {
+    margin: 0 14px 14px;
+
+    padding: 18px;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .trajectory-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .all-ships-intro h1 {
+    font-size: 1.3rem;
+  }
+}
