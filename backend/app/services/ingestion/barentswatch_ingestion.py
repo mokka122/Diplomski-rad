@@ -1,10 +1,12 @@
 import asyncio
 import logging
 
+from app.repositories.redis_vessel_repository import (
+    RedisVesselRepository,
+)
 from app.repositories.vessel_repository import VesselRepository
 from app.services.data_providers.barentswatch import BarentsWatchProvider
 from app.services.normalizer import normalize_barentswatch_message
-
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +17,7 @@ class BarentsWatchIngestionService:
     def __init__(self):
         self.provider = BarentsWatchProvider()
         self.repository = VesselRepository()
+        self.redis_repository = RedisVesselRepository()
 
         self.received_messages = 0
         self.saved_positions = 0
@@ -35,10 +38,15 @@ class BarentsWatchIngestionService:
                         position_saved = await self.repository.save_position(
                             position
                         )
+
                         current_updated = (
                             await self.repository.upsert_current_vessel(
                                 position
                             )
+                        )
+
+                        await self.redis_repository.save_current_vessel(
+                            position
                         )
 
                         if position_saved:

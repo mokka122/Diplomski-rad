@@ -7,6 +7,7 @@ from app.api.ingestion import router as ingestion_router
 from app.api.testing import router as testing_router
 from app.db.database import database
 from app.db.startup import create_indexes
+from app.db.redis import redis_client
 
 from app.api.vessels import router as vessels_router
 
@@ -55,3 +56,20 @@ async def health_check():
         "status": "healthy",
         "database": "connected",
     }
+    
+@app.get("/health/redis")
+async def redis_health_check():
+    try:
+        await redis_client.ping()
+
+        return {
+            "status": "healthy",
+            "redis": "connected",
+        }
+
+    except Exception as error:
+        return {
+            "status": "unhealthy",
+            "redis": "disconnected",
+            "error": str(error),
+        }
