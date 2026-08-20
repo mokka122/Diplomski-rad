@@ -1,5 +1,6 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -25,10 +26,29 @@ const emit = defineEmits(["vessel-selected"]);
 const mapElement = ref(null);
 
 let map = null;
+
 let vesselsLayer = null;
-let hasSetInitialBounds = false;
-let isTouchDevice = false;
 let trajectoryLayer = null;
+let geofenceLayer = null;
+
+let isTouchDevice = false;
+
+let hasFocusedAlesund = false;
+
+/* =========================================================
+   ÅLESUND STUDY AREA
+   ========================================================= */
+
+const ALESUND_BOUNDS = [
+  [62.43, 6.05],
+  [62.52, 6.27],
+];
+
+const ALESUND_CENTER = [62.475, 6.16];
+
+/* =========================================================
+   BASIC HELPERS
+   ========================================================= */
 
 function isValidCoordinate(value, min, max) {
   const number = Number(value);
@@ -52,32 +72,74 @@ function getDirection(vessel) {
   return 0;
 }
 
+/* =========================================================
+   SPEED CLASSIFICATION
+   ========================================================= */
+
 function getMarkerColor(speed) {
   if (speed === null || speed === undefined) {
     return "#71818a";
   }
 
-  if (Number(speed) >= 15) {
-    return "#e9794b";
+  const value = Number(speed);
+
+  if (!Number.isFinite(value)) {
+    return "#71818a";
   }
 
-  if (Number(speed) >= 5) {
-    return "#16898b";
+  if (value >= 15) {
+    return "#d9843e";
   }
 
-  return "#3c9c68";
+  if (value >= 5) {
+    return "#168b79";
+  }
+
+  return "#3b966c";
 }
+
+function getSpeedCategory(speed) {
+  if (speed === null || speed === undefined) {
+    return "Unknown speed";
+  }
+
+  const value = Number(speed);
+
+  if (!Number.isFinite(value)) {
+    return "Unknown speed";
+  }
+
+  if (value >= 15) {
+    return "Fast";
+  }
+
+  if (value >= 5) {
+    return "Under way";
+  }
+
+  return "Slow";
+}
+
+/* =========================================================
+   FORMATTERS
+   ========================================================= */
 
 function formatValue(value, suffix = "") {
   if (value === null || value === undefined) {
     return "—";
   }
 
-  return `${Number(value).toFixed(1)}${suffix}`;
+  const number = Number(value);
+
+  if (!Number.isFinite(number)) {
+    return "—";
+  }
+
+  return `${number.toFixed(1)}${suffix}`;
 }
 
 function escapeHtml(value) {
-  return String(value)
+  return String(value ?? "")
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
@@ -85,90 +147,164 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+/* =========================================================
+   TOOLTIP / POPUP
+   ========================================================= */
+
 function createInfoContent(vessel) {
   const vesselName = escapeHtml(vessel.vessel_name || "Unknown vessel");
 
   const shipType = escapeHtml(vessel.ship_type ?? "Unknown type");
 
+  const speedCategory = getSpeedCategory(vessel.sog);
+
   return `
     <div class="vessel-tooltip-content">
-      <strong>${vesselName}</strong>
+      <div class="vessel-tooltip-heading">
+        <strong>
+          ${vesselName}
+        </strong>
 
-      <span>MMSI: ${escapeHtml(vessel.mmsi)}</span>
+        <span>
+          ${escapeHtml(speedCategory)}
+        </span>
+      </div>
 
-      <span>
-        Speed: ${formatValue(vessel.sog, " kn")}
-      </span>
+      <div class="vessel-tooltip-grid">
+        <div>
+          <small>MMSI</small>
+          <span>
+            ${escapeHtml(vessel.mmsi)}
+          </span>
+        </div>
 
-      <span>
-        Course: ${formatValue(vessel.cog, "°")}
-      </span>
+        <div>
+          <small>Type</small>
+          <span>
+            ${shipType}
+          </span>
+        </div>
 
-      <span>
-        Heading: ${formatValue(vessel.heading, "°")}
-      </span>
+        <div>
+          <small>Speed</small>
+          <span>
+            ${formatValue(vessel.sog, " kn")}
+          </span>
+        </div>
 
-      <span>
-        Type: ${shipType}
-      </span>
+        <div>
+          <small>Course</small>
+          <span>
+            ${formatValue(vessel.cog, "°")}
+          </span>
+        </div>
+      </div>
     </div>
   `;
 }
 
+/* =========================================================
+   CUSTOM VESSEL ICON
+   ========================================================= */
+
 function createVesselIcon(vessel) {
   const color = getMarkerColor(vessel.sog);
+
   const direction = getDirection(vessel);
+
+  const isSelected = props.selectedVessel?.mmsi === vessel.mmsi;
 
   return L.divIcon({
     className: "vessel-marker-wrapper",
-    iconSize: [34, 42],
-    iconAnchor: [17, 21],
-    popupAnchor: [0, -22],
+
+    iconSize: [38, 44],
+
+    iconAnchor: [19, 22],
+
+    popupAnchor: [0, -25],
+
+    tooltipAnchor: [0, -23],
 
     html: `
       <div
-        class="vessel-marker"
+        class="
+          oceaneye-vessel-marker
+          ${isSelected ? "oceaneye-vessel-marker--selected" : ""}
+        "
         style="
-          --marker-color: ${color};
-          transform: rotate(${direction}deg);
+          --vessel-color: ${color};
+          --vessel-direction: ${direction}deg;
         "
       >
+        <div
+          class="oceaneye-vessel-marker-ring"
+        ></div>
+
         <svg
-          viewBox="0 0 34 42"
+          viewBox="0 0 40 48"
           aria-hidden="true"
         >
           <path
+            class="oceaneye-vessel-hull"
             d="
-              M17 2
-              C25 7 29 16 29 27
-              L25 39
-              H9
-              L5 27
-              C5 16 9 7 17 2
+              M20 3
+              L34 38
+              L20 33
+              L6 38
               Z
             "
-            fill="var(--marker-color)"
-            stroke="#ffffff"
-            stroke-width="2"
-            stroke-linejoin="round"
           />
+
           <path
-            d="M11 16 H23 V27 H11 Z"
-            fill="#ffffff"
-            fill-opacity="0.88"
+            class="oceaneye-vessel-centerline"
+            d="M20 10 V34"
           />
+
           <path
-            d="M17 5 V38"
-            stroke="#ffffff"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-opacity="0.8"
+            class="oceaneye-vessel-crossline"
+            d="M12 32 L20 28 L28 32"
           />
         </svg>
       </div>
     `,
   });
 }
+
+/* =========================================================
+   GEOFENCE
+   ========================================================= */
+
+function createGeofence() {
+  if (!map) {
+    return;
+  }
+
+  if (geofenceLayer) {
+    geofenceLayer.remove();
+  }
+
+  geofenceLayer = L.rectangle(ALESUND_BOUNDS, {
+    color: "#168b79",
+
+    weight: 1.5,
+
+    opacity: 0.85,
+
+    fillColor: "#168b79",
+
+    fillOpacity: 0.055,
+
+    dashArray: "7 7",
+
+    interactive: false,
+  });
+
+  geofenceLayer.addTo(map);
+}
+
+/* =========================================================
+   TRAJECTORY
+   ========================================================= */
 
 function clearTrajectory() {
   if (!trajectoryLayer) {
@@ -202,50 +338,70 @@ function updateTrajectory() {
   ]);
 
   const trajectory = L.polyline(latLngs, {
-    color: "#16898b",
-    weight: 4,
-    opacity: 0.75,
+    color: "#168b79",
+
+    weight: 3,
+
+    opacity: 0.72,
+
     lineJoin: "round",
+
     lineCap: "round",
   });
 
   trajectory.addTo(trajectoryLayer);
 
-  positions.forEach((position) => {
+  positions.forEach((position, index) => {
+    const isLast = index === positions.length - 1;
+
     const marker = L.circleMarker(
       [Number(position.latitude), Number(position.longitude)],
       {
-        radius: 4,
+        radius: isLast ? 4.5 : 3,
+
         color: "#ffffff",
+
         weight: 1.5,
-        fillColor: "#16898b",
-        fillOpacity: 0.9,
+
+        fillColor: "#168b79",
+
+        fillOpacity: isLast ? 1 : 0.72,
       },
     );
 
     const timestamp = position.timestamp
       ? new Date(position.timestamp).toLocaleString("en-GB", {
           dateStyle: "medium",
+
           timeStyle: "medium",
         })
       : "—";
 
-    const speed =
-      position.sog === null || position.sog === undefined
-        ? "—"
-        : `${Number(position.sog).toFixed(1)} kn`;
-
     marker.bindTooltip(
       `
-        <div class="trajectory-tooltip-content">
-          <strong>Historical position</strong>
-          <span>${timestamp}</span>
-          <span>Speed: ${speed}</span>
-        </div>
-      `,
+          <div
+            class="trajectory-tooltip-content"
+          >
+            <strong>
+              Historical position
+            </strong>
+
+            <span>
+              ${timestamp}
+            </span>
+
+            <span>
+              Speed:
+              ${formatValue(position.sog, " kn")}
+            </span>
+          </div>
+        `,
       {
         direction: "top",
+
         opacity: 1,
+
+        className: "trajectory-tooltip",
       },
     );
 
@@ -253,14 +409,16 @@ function updateTrajectory() {
   });
 }
 
+/* =========================================================
+   VESSEL MARKERS
+   ========================================================= */
+
 function updateVesselMarkers() {
   if (!map || !vesselsLayer) {
     return;
   }
 
   vesselsLayer.clearLayers();
-
-  const coordinates = [];
 
   for (const vessel of props.vessels) {
     const validLatitude = isValidCoordinate(vessel.latitude, -90, 90);
@@ -272,85 +430,305 @@ function updateVesselMarkers() {
     }
 
     const latitude = Number(vessel.latitude);
-    const longitude = Number(vessel.longitude);
 
-    coordinates.push([latitude, longitude]);
+    const longitude = Number(vessel.longitude);
 
     const marker = L.marker([latitude, longitude], {
       icon: createVesselIcon(vessel),
+
       title: vessel.vessel_name || vessel.mmsi,
     });
 
     if (isTouchDevice) {
-      marker.bindPopup(createInfoContent(vessel)).on("click", () => {
-        emit("vessel-selected", vessel);
-      });
+      marker
+        .bindPopup(createInfoContent(vessel), {
+          className: "oceaneye-vessel-popup",
+        })
+        .on("click", () => {
+          emit("vessel-selected", vessel);
+        });
     } else {
       marker
         .bindTooltip(createInfoContent(vessel), {
           className: "vessel-tooltip",
+
           direction: "top",
-          offset: [0, -16],
+
+          offset: [0, -18],
+
           opacity: 1,
         })
         .on("click", () => {
           emit("vessel-selected", vessel);
         });
     }
+
     marker.addTo(vesselsLayer);
   }
-
-  if (coordinates.length > 0 && !hasSetInitialBounds) {
-    map.fitBounds(L.latLngBounds(coordinates), {
-      padding: [48, 48],
-      maxZoom: 9,
-    });
-
-    hasSetInitialBounds = true;
-  }
 }
+
+function focusAlesund() {
+  if (!map) {
+    return;
+  }
+
+  map.fitBounds(ALESUND_BOUNDS, {
+    padding: [42, 42],
+
+    maxZoom: 11,
+  });
+}
+
+/* =========================================================
+   SELECTED VESSEL FOCUS
+   ========================================================= */
+
+function focusSelectedVessel() {
+  if (!map || !props.selectedVessel) {
+    return;
+  }
+
+  const latitude = Number(props.selectedVessel.latitude);
+
+  const longitude = Number(props.selectedVessel.longitude);
+
+  if (
+    !isValidCoordinate(latitude, -90, 90) ||
+    !isValidCoordinate(longitude, -180, 180)
+  ) {
+    return;
+  }
+
+  map.flyTo([latitude, longitude], Math.max(map.getZoom(), 11), {
+    duration: 0.7,
+  });
+}
+
+/* =========================================================
+   MAP INITIALIZATION
+   ========================================================= */
 
 onMounted(() => {
   isTouchDevice = window.matchMedia("(hover: none), (pointer: coarse)").matches;
 
   map = L.map(mapElement.value, {
-    zoomControl: true,
-  }).setView([62, 7], 5);
+    zoomControl: false,
+
+    attributionControl: true,
+
+    preferCanvas: true,
+  }).setView(ALESUND_CENTER, 10);
+
+  L.control
+    .zoom({
+      position: "topright",
+    })
+    .addTo(map);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
+
     attribution: "&copy; OpenStreetMap contributors",
   }).addTo(map);
 
-  vesselsLayer = L.layerGroup().addTo(map);
+  geofenceLayer = L.layerGroup().addTo(map);
 
   trajectoryLayer = L.layerGroup().addTo(map);
 
+  vesselsLayer = L.layerGroup().addTo(map);
+
+  createGeofence();
+
   updateVesselMarkers();
+
   updateTrajectory();
 
+  if (!hasFocusedAlesund) {
+    map.fitBounds(ALESUND_BOUNDS, {
+      padding: [42, 42],
+
+      maxZoom: 11,
+    });
+
+    hasFocusedAlesund = true;
+  }
+
   setTimeout(() => {
-    map.invalidateSize();
+    map?.invalidateSize();
   }, 0);
 });
 
-watch(() => props.vessels, updateVesselMarkers);
+/* =========================================================
+   WATCHERS
+   ========================================================= */
 
 watch(
-  () => props.vesselHistory,
-  updateTrajectory,
+  () => props.vessels,
+  () => {
+    updateVesselMarkers();
+  },
   {
     deep: true,
   },
-)
+);
+
+watch(
+  () => props.vesselHistory,
+  () => {
+    updateTrajectory();
+  },
+  {
+    deep: true,
+  },
+);
+watch(
+  () =>
+    props.selectedVessel?.mmsi,
+
+  (
+    currentMmsi,
+    previousMmsi,
+  ) => {
+    updateVesselMarkers();
+
+    if (
+      currentMmsi &&
+      currentMmsi !==
+      previousMmsi
+    ) {
+      focusSelectedVessel();
+    }
+  },
+);
+
+/* =========================================================
+   CLEANUP
+   ========================================================= */
 
 onBeforeUnmount(() => {
   if (map) {
     map.remove();
+    map = null;
   }
 });
 </script>
 
 <template>
-  <div ref="mapElement" class="vessel-map"></div>
+  <div class="vessel-map-shell">
+    <div
+      ref="mapElement"
+      class="vessel-map"
+    ></div>
+
+    <!-- ==============================================
+         MAP RESET
+         ============================================== -->
+
+    <button
+      class="map-area-reset"
+      type="button"
+      title="Return map to Ålesund study area"
+      @click="focusAlesund"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path
+          d="
+            M12 3
+            C8.7 3 6 5.7 6 9
+            C6 13.6 12 20 12 20
+            C12 20 18 13.6 18 9
+            C18 5.7 15.3 3 12 3
+            Z
+          "
+        />
+
+        <circle
+          cx="12"
+          cy="9"
+          r="2.2"
+        />
+      </svg>
+
+      <span>
+        Back to Ålesund
+      </span>
+    </button>
+
+    <!-- ==============================================
+         MAP LEGEND
+         ============================================== -->
+
+    <div class="map-legend">
+      <div class="map-legend-title">
+        Map legend
+      </div>
+
+      <div class="map-legend-items">
+        <div>
+          <span
+            class="
+              map-legend-dot
+              map-legend-dot--slow
+            "
+          ></span>
+
+          <span>
+            Slow
+          </span>
+        </div>
+
+        <div>
+          <span
+            class="
+              map-legend-dot
+              map-legend-dot--moving
+            "
+          ></span>
+
+          <span>
+            Under way
+          </span>
+        </div>
+
+        <div>
+          <span
+            class="
+              map-legend-dot
+              map-legend-dot--fast
+            "
+          ></span>
+
+          <span>
+            Fast
+          </span>
+        </div>
+
+        <div>
+          <span
+            class="
+              map-legend-dot
+              map-legend-dot--unknown
+            "
+          ></span>
+
+          <span>
+            Unknown
+          </span>
+        </div>
+
+        <div>
+          <span
+            class="map-legend-geofence"
+          ></span>
+
+          <span>
+            Study area
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>

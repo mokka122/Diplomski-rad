@@ -30,3 +30,32 @@ export async function getVesselHistory(
 
   return response.json();
 }
+
+export async function getCurrentTraffic() {
+  const response = await fetch(
+    `${API_BASE_URL}/traffic/current`,
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Neuspješno dohvaćanje podataka o prometu (${response.status})`,
+    );
+  }
+
+  return response.json();
+}
+
+
+export async function getPredictionStatus() {
+  const response = await fetch(
+    `${API_BASE_URL}/prediction/live/status`,
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Neuspješno dohvaćanje statusa predikcije (${response.status})`,
+    );
+  }
+
+  return response.json();
+}

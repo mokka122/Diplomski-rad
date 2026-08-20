@@ -1,0 +1,85 @@
+{
+    "project": "OceanEye",
+    "study_area": "Ålesund municipality, Norway",
+    "prediction_horizon_hours": 1,
+    "target_source": "future_total_events_1h",
+    "target_column": "traffic_level",
+    "class_mapping": {
+        "LOW": 0,
+        "MEDIUM": 1,
+        "HIGH": 2
+    },
+    "thresholds": {
+        "low_max": 3.0,
+        "medium_max": 11.0
+    },
+    "threshold_method": "33rd and 67th percentiles calculated using training data only",
+    "temporal_split": {
+        "train": "2024-01-01 through 2024-12-31",
+        "validation": "2025-01-01 through 2025-09-30",
+        "test": "2025-10-01 through 2025-12-31"
+    },
+    "features": [
+        "total_events",
+        "arrivals",
+        "departures",
+        "unique_vessels",
+        "passenger_events",
+        "cargo_events",
+        "fishing_events",
+        "tanker_events",
+        "auxiliary_events",
+        "tug_events",
+        "hour_local",
+        "day_of_week",
+        "month",
+        "day_of_year",
+        "is_weekend",
+        "total_events_lag_1h",
+        "total_events_lag_2h",
+        "total_events_lag_3h",
+        "total_events_lag_6h",
+        "total_events_lag_24h",
+        "arrivals_lag_1h",
+        "arrivals_lag_2h",
+        "arrivals_lag_3h",
+        "arrivals_lag_24h",
+        "departures_lag_1h",
+        "departures_lag_2h",
+        "departures_lag_3h",
+        "departures_lag_24h",
+        "unique_vessels_lag_1h",
+        "unique_vessels_lag_24h",
+        "total_events_rolling_mean_3h",
+        "total_events_rolling_mean_6h",
+        "total_events_rolling_mean_24h",
+        "arrivals_rolling_mean_3h",
+        "arrivals_rolling_mean_6h",
+        "arrivals_rolling_mean_24h",
+        "hour_sin",
+        "hour_cos",
+        "day_of_week_sin",
+        "day_of_week_cos",
+        "month_sin",
+        "month_cos"
+    ],
+    "feature_count": 42,
+    "row_count": 17517,
+    "class_counts": {
+        "train": {
+            "MEDIUM": 3168,
+            "LOW": 2893,
+            "HIGH": 2698
+        },
+        "validation": {
+            "MEDIUM": 3049,
+            "LOW": 2399,
+            "HIGH": 1103
+        },
+        "test": {
+            "MEDIUM": 1065,
+            "LOW": 865,
+            "HIGH": 277
+        }
+    }
+}

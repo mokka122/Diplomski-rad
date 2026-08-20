@@ -20,12 +20,26 @@ from app.db.elasticsearch import elasticsearch_client
 
 from app.api.search import router as search_router
 
+from app.api.prediction import router as prediction_router
+
+from app.api.traffic import router as traffic_router
+
+from app.services.hourly_traffic_snapshot_service import (
+    hourly_traffic_snapshot_service,
+)
+
+from app.api.auth import (
+    router as auth_router,
+)
+
 kafka_consumer_service: KafkaConsumerService | None = None
 kafka_consumer_task: asyncio.Task | None = None
 
+hourly_snapshot_task: asyncio.Task | None = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    global hourly_snapshot_task
     global kafka_consumer_service
     global kafka_consumer_task
 
@@ -36,8 +50,22 @@ async def lifespan(app: FastAPI):
     kafka_consumer_task = asyncio.create_task(
         kafka_consumer_service.run()
     )
+    
+    hourly_snapshot_task = asyncio.create_task(
+    hourly_traffic_snapshot_service.run()
+)
 
     yield
+    
+    if hourly_snapshot_task:
+
+        hourly_snapshot_task.cancel()
+
+        try:
+            await hourly_snapshot_task
+
+        except asyncio.CancelledError:
+            pass
 
     if kafka_consumer_task:
         kafka_consumer_task.cancel()
@@ -75,6 +103,9 @@ app.include_router(ingestion_router)
 app.include_router(testing_router)
 app.include_router(vessels_router)
 app.include_router(search_router)
+app.include_router(prediction_router)
+app.include_router(traffic_router)
+app.include_router(auth_router)
 
 
 @app.get("/")
