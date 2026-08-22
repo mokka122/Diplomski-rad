@@ -30,7 +30,7 @@ class BarentsWatchProvider(DataProvider):
             "client_id": self.client_id,
             "client_secret": self.client_secret,
             "grant_type": "client_credentials",
-            "scope": "api",
+            "scope": "ais",
         }
 
         async with httpx.AsyncClient(timeout=30.0) as client:
