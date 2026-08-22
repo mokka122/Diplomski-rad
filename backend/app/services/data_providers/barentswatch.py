@@ -27,6 +27,23 @@ class BarentsWatchProvider(DataProvider):
 
     async def get_access_token(self) -> str:
         data = {
+            "client_id": self.client_id,
+            "client_secret": self.client_secret,
+            "grant_type": "client_credentials",
+            "scope": "api",
+        }
+
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.post(
+                self.TOKEN_URL,
+                data=data,
+            )
+
+        response.raise_for_status()
+
+        return response.json()["access_token"]
+
+        data = {
             "grant_type": "client_credentials",
             "scope": "ais",
         }
