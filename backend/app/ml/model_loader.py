@@ -12,18 +12,12 @@ from app.ml.config import (
 
 class ModelLoader:
     """
-    Loads and caches the trained OceanEye traffic model.
-
-    The backend is allowed to run without a trained model.
-
-    This is intentional because the rest of OceanEye can be
-    developed and tested before the ML training phase is completed.
+    Loads and caches the final OceanEye production traffic model.
     """
 
     def __init__(self) -> None:
         self._model: Optional[Any] = None
         self._metadata: Optional[dict] = None
-
         self._loaded_model_path: Optional[Path] = None
 
     # ==================================================================================
@@ -47,13 +41,6 @@ class ModelLoader:
     # ==================================================================================
 
     def load_model(self) -> Optional[Any]:
-        """
-        Load the model only when it exists.
-
-        Returns:
-            Trained sklearn model/pipeline,
-            or None when no model has been trained yet.
-        """
 
         if self._model is not None:
             return self._model
@@ -65,7 +52,9 @@ class ModelLoader:
             MODEL_FILE
         )
 
-        self._loaded_model_path = MODEL_FILE
+        self._loaded_model_path = (
+            MODEL_FILE
+        )
 
         return self._model
 
@@ -77,6 +66,7 @@ class ModelLoader:
     # ==================================================================================
 
     def load_metadata(self) -> Optional[dict]:
+
         if self._metadata is not None:
             return self._metadata
 
@@ -88,7 +78,10 @@ class ModelLoader:
             "r",
             encoding="utf-8",
         ) as file:
-            self._metadata = json.load(file)
+
+            self._metadata = json.load(
+                file
+            )
 
         return self._metadata
 
@@ -96,15 +89,51 @@ class ModelLoader:
         return self.load_metadata()
 
     # ==================================================================================
+    # MODEL NAME
+    # ==================================================================================
+
+    def get_model_name(self) -> Optional[str]:
+
+        metadata = (
+            self.get_metadata()
+            or {}
+        )
+
+        model_family = (
+            metadata.get(
+                "model_family"
+            )
+        )
+
+        candidate_id = (
+            metadata.get(
+                "candidate_id"
+            )
+        )
+
+        if (
+            model_family
+            and candidate_id
+        ):
+            return (
+                f"{model_family} "
+                f"({candidate_id})"
+            )
+
+        if model_family:
+            return model_family
+
+        return (
+            metadata.get(
+                "selected_model"
+            )
+        )
+
+    # ==================================================================================
     # RELOAD
     # ==================================================================================
 
     def reload(self) -> bool:
-        """
-        Clear the cached model and metadata and load them again.
-
-        Useful after a newly trained model is placed in ml/models/.
-        """
 
         self._model = None
         self._metadata = None
@@ -122,28 +151,29 @@ class ModelLoader:
     # ==================================================================================
 
     def get_status(self) -> dict:
-        metadata = self.get_metadata()
 
         return {
-            "model_available": self.model_exists,
-            "model_loaded": self.is_loaded,
-            "metadata_available": self.metadata_exists,
+            "model_available":
+                self.model_exists,
 
-            "model_path": str(
-                MODEL_FILE
-            ),
+            "model_loaded":
+                self.is_loaded,
 
-            "metadata_path": str(
-                MODEL_METADATA_FILE
-            ),
+            "metadata_available":
+                self.metadata_exists,
 
-            "selected_model": (
-                metadata.get(
-                    "selected_model"
-                )
-                if metadata
-                else None
-            ),
+            "model_path":
+                str(
+                    MODEL_FILE
+                ),
+
+            "metadata_path":
+                str(
+                    MODEL_METADATA_FILE
+                ),
+
+            "selected_model":
+                self.get_model_name(),
         }
 
 

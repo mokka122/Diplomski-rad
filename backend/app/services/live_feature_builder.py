@@ -10,6 +10,10 @@ from zoneinfo import ZoneInfo
 
 from app.ml.config import (
     FEATURE_COLUMNS,
+    REQUIRED_HISTORY_HOURS,
+    STUDY_AREA,
+    STUDY_AREA_CENTROID_LAT,
+    STUDY_AREA_CENTROID_LON,
 )
 
 from app.repositories.redis_traffic_repository import (
@@ -24,8 +28,8 @@ OSLO_TIMEZONE = ZoneInfo(
 
 class LiveFeatureBuilder:
     """
-    Builds the same 42-feature structure used by the
-    historical OceanEye ML dataset.
+    Builds the live feature structure required by the
+    final OceanEye Multi-Area V2 XGBoost model.
 
     Historical source:
         SafeSeaNet voyages
@@ -35,8 +39,17 @@ class LiveFeatureBuilder:
         -> geofence ENTRY / EXIT
         -> Redis hourly aggregates
 
-    The semantic mapping is approximate but intentionally
-    kept structurally compatible with the ML dataset.
+    Final model contract:
+        44 numeric features
+        + 1 categorical feature: study_area
+        = 45 model inputs
+
+    Important methodological decisions:
+        - only the latest fully completed hour is used
+        - 25 consecutive hourly aggregates are required
+        - rolling statistics exclude the reference hour
+          because historical training used shift(1)
+        - Ålesund is supplied as the live study-area context
     """
 
     def __init__(self):
@@ -52,6 +65,24 @@ class LiveFeatureBuilder:
         self,
         timestamp: datetime | None = None,
     ) -> datetime:
+        """
+        Return the latest fully completed UTC hour.
+
+        Example:
+
+            Current UTC time:
+                2026-08-22 15:40
+
+            Current incomplete hour:
+                15:00-15:59
+
+            Returned reference hour:
+                14:00
+
+        Historical ML features were created from complete hourly
+        intervals, therefore live inference must follow the same
+        temporal semantics.
+        """
 
         if timestamp is None:
             timestamp = datetime.now(
@@ -67,11 +98,22 @@ class LiveFeatureBuilder:
             timezone.utc
         )
 
-        return timestamp.replace(
-            minute=0,
-            second=0,
-            microsecond=0,
+        current_hour_start = (
+            timestamp.replace(
+                minute=0,
+                second=0,
+                microsecond=0,
+            )
         )
+
+        last_completed_hour = (
+            current_hour_start
+            - timedelta(
+                hours=1
+            )
+        )
+
+        return last_completed_hour
 
     # ==================================================================================
     # LOAD HISTORY
@@ -82,22 +124,24 @@ class LiveFeatureBuilder:
         reference_hour: datetime,
     ) -> dict[int, dict]:
         """
-        Load reference hour and previous 24 hours.
+        Load the reference hour and previous 24 hours.
 
         Dictionary keys represent lag:
 
-            0  = current/reference hour
-            1  = previous hour
-            2  = two hours ago
+            0  = reference hour
+            1  = one hour before reference hour
+            2  = two hours before
             ...
-            24 = same hour previous day
+            24 = 24 hours before reference hour
+
+        Total:
+            25 consecutive hourly aggregates
         """
 
         history = {}
 
         for lag in range(
-            0,
-            25,
+            REQUIRED_HISTORY_HOURS
         ):
 
             timestamp = (
@@ -107,7 +151,9 @@ class LiveFeatureBuilder:
                 )
             )
 
-            history[lag] = (
+            history[
+                lag
+            ] = (
                 await self.redis_repository
                 .get_hour(
                     timestamp
@@ -117,7 +163,7 @@ class LiveFeatureBuilder:
         return history
 
     # ==================================================================================
-    # ROLLING
+    # ROLLING FEATURES
     # ==================================================================================
 
     def _rolling_mean(
@@ -127,13 +173,13 @@ class LiveFeatureBuilder:
         window: int,
     ) -> float:
         """
-        Historical training code used:
+        Historical training used:
 
             series.shift(1).rolling(window)
 
-        Therefore live rolling means MUST NOT use lag 0.
+        Therefore lag 0 MUST NOT be included in rolling features.
 
-        For a 3-hour rolling feature:
+        Example for a 3-hour rolling mean:
 
             lag 1
             lag 2
@@ -152,12 +198,14 @@ class LiveFeatureBuilder:
                 {}
             )
 
+            value = hour.get(
+                field,
+                0,
+            )
+
             values.append(
                 float(
-                    hour.get(
-                        field,
-                        0,
-                    )
+                    value
                 )
             )
 
@@ -165,18 +213,26 @@ class LiveFeatureBuilder:
             return 0.0
 
         return float(
-            sum(values)
-            / len(values)
+            sum(
+                values
+            )
+            / len(
+                values
+            )
         )
 
     # ==================================================================================
-    # CALENDAR
+    # CALENDAR FEATURES
     # ==================================================================================
 
     def _calendar_features(
         self,
         reference_hour: datetime,
     ) -> dict:
+        """
+        Generate calendar and cyclical features in Europe/Oslo
+        local time, matching historical feature engineering.
+        """
 
         local_time = (
             reference_hour
@@ -275,7 +331,7 @@ class LiveFeatureBuilder:
                     / 12
                 ),
         }
-        
+
     # ==================================================================================
     # HISTORY READINESS
     # ==================================================================================
@@ -284,6 +340,12 @@ class LiveFeatureBuilder:
         self,
         timestamp: datetime | None = None,
     ) -> dict:
+        """
+        Verify that all 25 consecutive hourly Redis aggregates exist.
+
+        This is stricter than checking only specific lag hours because
+        rolling features require continuous historical coverage.
+        """
 
         reference_hour = (
             self.normalize_reference_hour(
@@ -291,18 +353,11 @@ class LiveFeatureBuilder:
             )
         )
 
-        required_lags = [
-            0,
-            1,
-            2,
-            3,
-            6,
-            24,
-        ]
-
         availability = {}
 
-        for lag in required_lags:
+        for lag in range(
+            REQUIRED_HISTORY_HOURS
+        ):
 
             hour = (
                 reference_hour
@@ -325,7 +380,9 @@ class LiveFeatureBuilder:
                     hour.isoformat(),
 
                 "available":
-                    exists,
+                    bool(
+                        exists
+                    ),
             }
 
         available_count = sum(
@@ -337,33 +394,84 @@ class LiveFeatureBuilder:
             ]
         )
 
-        required_count = len(
-            required_lags
+        missing_hours = []
+
+        for lag in range(
+            REQUIRED_HISTORY_HOURS
+        ):
+
+            key = (
+                f"lag_{lag}h"
+            )
+
+            if not availability[
+                key
+            ][
+                "available"
+            ]:
+
+                missing_hours.append(
+                    {
+                        "lag_hours":
+                            lag,
+
+                        "timestamp_utc":
+                            availability[
+                                key
+                            ][
+                                "timestamp_utc"
+                            ],
+                    }
+                )
+
+        ready = (
+            available_count
+            == REQUIRED_HISTORY_HOURS
         )
 
         return {
             "ready":
-                available_count
-                == required_count,
+                ready,
+
+            "reference_hour_utc":
+                reference_hour.isoformat(),
 
             "available_required_hours":
                 available_count,
 
             "required_hours":
-                required_count,
+                REQUIRED_HISTORY_HOURS,
+
+            "consecutive_history_required":
+                True,
+
+            "missing_hours":
+                missing_hours,
 
             "availability":
                 availability,
         }
 
     # ==================================================================================
-    # BUILD
+    # BUILD FEATURES
     # ==================================================================================
 
     async def build_features(
         self,
         timestamp: datetime | None = None,
     ) -> dict:
+        """
+        Build all 45 inputs expected by the final V2 model.
+
+        Output structure:
+
+            {
+                reference_hour_utc,
+                prediction_target_hour_utc,
+                feature_count,
+                features
+            }
+        """
 
         reference_hour = (
             self.normalize_reference_hour(
@@ -371,19 +479,27 @@ class LiveFeatureBuilder:
             )
         )
 
+        # ==================================================================================
+        # LOAD 25-HOUR HISTORY
+        # ==================================================================================
+
         history = (
             await self._load_hourly_history(
                 reference_hour
             )
         )
 
-        current = history[0]
+        current = (
+            history[
+                0
+            ]
+        )
+
+        # ==================================================================================
+        # CURRENT HOUR FEATURES
+        # ==================================================================================
 
         features = {
-            # ==================================================================================
-            # CURRENT HOUR
-            # ==================================================================================
-
             "total_events":
                 current[
                     "total_events"
@@ -443,27 +559,37 @@ class LiveFeatureBuilder:
             # ==================================================================================
 
             "total_events_lag_1h":
-                history[1][
+                history[
+                    1
+                ][
                     "total_events"
                 ],
 
             "total_events_lag_2h":
-                history[2][
+                history[
+                    2
+                ][
                     "total_events"
                 ],
 
             "total_events_lag_3h":
-                history[3][
+                history[
+                    3
+                ][
                     "total_events"
                 ],
 
             "total_events_lag_6h":
-                history[6][
+                history[
+                    6
+                ][
                     "total_events"
                 ],
 
             "total_events_lag_24h":
-                history[24][
+                history[
+                    24
+                ][
                     "total_events"
                 ],
 
@@ -472,22 +598,30 @@ class LiveFeatureBuilder:
             # ==================================================================================
 
             "arrivals_lag_1h":
-                history[1][
+                history[
+                    1
+                ][
                     "arrivals"
                 ],
 
             "arrivals_lag_2h":
-                history[2][
+                history[
+                    2
+                ][
                     "arrivals"
                 ],
 
             "arrivals_lag_3h":
-                history[3][
+                history[
+                    3
+                ][
                     "arrivals"
                 ],
 
             "arrivals_lag_24h":
-                history[24][
+                history[
+                    24
+                ][
                     "arrivals"
                 ],
 
@@ -496,41 +630,53 @@ class LiveFeatureBuilder:
             # ==================================================================================
 
             "departures_lag_1h":
-                history[1][
+                history[
+                    1
+                ][
                     "departures"
                 ],
 
             "departures_lag_2h":
-                history[2][
+                history[
+                    2
+                ][
                     "departures"
                 ],
 
             "departures_lag_3h":
-                history[3][
+                history[
+                    3
+                ][
                     "departures"
                 ],
 
             "departures_lag_24h":
-                history[24][
+                history[
+                    24
+                ][
                     "departures"
                 ],
 
             # ==================================================================================
-            # UNIQUE VESSELS
+            # UNIQUE VESSEL LAGS
             # ==================================================================================
 
             "unique_vessels_lag_1h":
-                history[1][
+                history[
+                    1
+                ][
                     "unique_vessels"
                 ],
 
             "unique_vessels_lag_24h":
-                history[24][
+                history[
+                    24
+                ][
                     "unique_vessels"
                 ],
 
             # ==================================================================================
-            # ROLLING TOTAL EVENTS
+            # TOTAL EVENT ROLLING MEANS
             # ==================================================================================
 
             "total_events_rolling_mean_3h":
@@ -555,7 +701,7 @@ class LiveFeatureBuilder:
                 ),
 
             # ==================================================================================
-            # ROLLING ARRIVALS
+            # ARRIVAL ROLLING MEANS
             # ==================================================================================
 
             "arrivals_rolling_mean_3h":
@@ -591,7 +737,24 @@ class LiveFeatureBuilder:
         )
 
         # ==================================================================================
-        # VALIDATE FEATURE CONTRACT
+        # MULTI-AREA CONTEXT
+        # ==================================================================================
+
+        features.update(
+            {
+                "centroid_lat":
+                    STUDY_AREA_CENTROID_LAT,
+
+                "centroid_lon":
+                    STUDY_AREA_CENTROID_LON,
+
+                "study_area":
+                    STUDY_AREA,
+            }
+        )
+
+        # ==================================================================================
+        # VALIDATE FINAL MODEL CONTRACT
         # ==================================================================================
 
         missing = [
@@ -624,10 +787,12 @@ class LiveFeatureBuilder:
                 )
             )
 
-        # Exact same ordering as ML runtime contract.
+        # Exact same order expected by the production ML pipeline.
         ordered_features = {
             feature:
-                features[feature]
+                features[
+                    feature
+                ]
             for feature in FEATURE_COLUMNS
         }
 

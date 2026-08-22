@@ -5,37 +5,41 @@ from pathlib import Path
 # PROJECT PATHS
 # ======================================================================================
 
-# config.py:
-#
-# OceanEye/
-# └── backend/
-#     └── app/
-#         └── ml/
-#             └── config.py
-#
-# parents[3] -> OceanEye/
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
 ML_ROOT = PROJECT_ROOT / "ml"
 
 MODEL_DIR = ML_ROOT / "models"
 
+
+# ======================================================================================
+# FINAL PRODUCTION MODEL
+# ======================================================================================
+
 MODEL_FILE = (
     MODEL_DIR
-    / "traffic_classifier.joblib"
+    / "traffic_classifier_multi_area_tuned.joblib"
 )
 
 MODEL_METADATA_FILE = (
     MODEL_DIR
-    / "traffic_classifier_metadata.json"
+    / "traffic_classifier_multi_area_tuned_metadata.json"
 )
 
 
 # ======================================================================================
 # MODEL INPUT FEATURES
 # ======================================================================================
+#
+# Final V2 contract:
+#
+# 44 numeric features
+# + study_area categorical feature
+# = 45 model inputs before one-hot encoding
+#
+# ======================================================================================
 
-FEATURE_COLUMNS = [
+NUMERIC_FEATURE_COLUMNS = [
     "total_events",
     "arrivals",
     "departures",
@@ -87,7 +91,21 @@ FEATURE_COLUMNS = [
     "day_of_week_cos",
     "month_sin",
     "month_cos",
+
+    "centroid_lat",
+    "centroid_lon",
 ]
+
+
+CATEGORICAL_FEATURE_COLUMNS = [
+    "study_area",
+]
+
+
+FEATURE_COLUMNS = (
+    NUMERIC_FEATURE_COLUMNS
+    + CATEGORICAL_FEATURE_COLUMNS
+)
 
 
 # ======================================================================================
@@ -108,13 +126,41 @@ INVERSE_CLASS_MAPPING = {
 
 
 # ======================================================================================
-# CURRENT ML DESIGN
+# LIVE STUDY AREA
+# ======================================================================================
+#
+# The production application currently monitors the
+# OceanEye operational Ålesund study area.
+#
+# The model itself was trained on five areas, but live
+# inference currently supplies Ålesund as the area context.
+#
 # ======================================================================================
 
-STUDY_AREA = "Ålesund municipality, Norway"
+STUDY_AREA = "Ålesund"
+
+STUDY_AREA_DISPLAY_NAME = (
+    "Ålesund operational study area, Norway"
+)
+
+STUDY_AREA_CENTROID_LAT = 62.4722
+
+STUDY_AREA_CENTROID_LON = 6.1495
+
+
+# ======================================================================================
+# PREDICTION DESIGN
+# ======================================================================================
 
 PREDICTION_HORIZON_HOURS = 1
 
 TARGET_DESCRIPTION = (
-    "Maritime traffic level in Ålesund during the next hour"
+    "Maritime traffic level during the next hour"
 )
+
+
+# ======================================================================================
+# LIVE HISTORY REQUIREMENTS
+# ======================================================================================
+
+REQUIRED_HISTORY_HOURS = 25

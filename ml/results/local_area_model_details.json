@@ -1,0 +1,1027 @@
+{
+  "Bergen": {
+    "best_candidate": {
+      "experiment": "OceanEye Local Model V3",
+      "study_area": "Bergen",
+      "model_family": "XGBoost",
+      "candidate_id": "LOCAL_XGB_07",
+      "parameters": {
+        "n_estimators": 300,
+        "learning_rate": 0.07,
+        "max_depth": 6,
+        "min_child_weight": 3,
+        "subsample": 0.85,
+        "colsample_bytree": 0.9
+      },
+      "selection_metric": "validation_macro_f1",
+      "validation_metrics": {
+        "accuracy": 0.5186202686202687,
+        "macro_precision": 0.4895579289658845,
+        "macro_recall": 0.5033429609265226,
+        "macro_f1": 0.4801661311798389,
+        "weighted_f1": 0.4896789529185867
+      },
+      "test_metrics": {
+        "accuracy": 0.4907113729043951,
+        "macro_precision": 0.4564302664737026,
+        "macro_recall": 0.4580313614548596,
+        "macro_f1": 0.4412919460000431,
+        "weighted_f1": 0.45869196455920214
+      },
+      "test_confusion_matrix": [
+        [
+          703,
+          120,
+          94
+        ],
+        [
+          430,
+          119,
+          141
+        ],
+        [
+          202,
+          137,
+          261
+        ]
+      ],
+      "test_classification_report": {
+        "LOW": {
+          "precision": 0.5265917602996255,
+          "recall": 0.7666303162486369,
+          "f1-score": 0.6243339253996447,
+          "support": 917.0
+        },
+        "MEDIUM": {
+          "precision": 0.31648936170212766,
+          "recall": 0.17246376811594202,
+          "f1-score": 0.22326454033771106,
+          "support": 690.0
+        },
+        "HIGH": {
+          "precision": 0.5262096774193549,
+          "recall": 0.435,
+          "f1-score": 0.4762773722627737,
+          "support": 600.0
+        },
+        "accuracy": 0.4907113729043951,
+        "macro avg": {
+          "precision": 0.4564302664737026,
+          "recall": 0.4580313614548596,
+          "f1-score": 0.4412919460000431,
+          "support": 2207.0
+        },
+        "weighted avg": {
+          "precision": 0.4608011373905019,
+          "recall": 0.4907113729043951,
+          "f1-score": 0.45869196455920214,
+          "support": 2207.0
+        }
+      },
+      "features": [
+        "total_events",
+        "arrivals",
+        "departures",
+        "unique_vessels",
+        "passenger_events",
+        "cargo_events",
+        "fishing_events",
+        "tanker_events",
+        "auxiliary_events",
+        "tug_events",
+        "hour_local",
+        "day_of_week",
+        "month",
+        "day_of_year",
+        "is_weekend",
+        "total_events_lag_1h",
+        "total_events_lag_2h",
+        "total_events_lag_3h",
+        "total_events_lag_6h",
+        "total_events_lag_24h",
+        "arrivals_lag_1h",
+        "arrivals_lag_2h",
+        "arrivals_lag_3h",
+        "arrivals_lag_24h",
+        "departures_lag_1h",
+        "departures_lag_2h",
+        "departures_lag_3h",
+        "departures_lag_24h",
+        "unique_vessels_lag_1h",
+        "unique_vessels_lag_24h",
+        "total_events_rolling_mean_3h",
+        "total_events_rolling_mean_6h",
+        "total_events_rolling_mean_24h",
+        "arrivals_rolling_mean_3h",
+        "arrivals_rolling_mean_6h",
+        "arrivals_rolling_mean_24h",
+        "hour_sin",
+        "hour_cos",
+        "day_of_week_sin",
+        "day_of_week_cos",
+        "month_sin",
+        "month_cos"
+      ],
+      "model_file": "C:\\Projects_monika\\Diplomski-rad\\ml\\models\\local\\traffic_classifier_local_bergen.joblib"
+    },
+    "tuning": [
+      {
+        "study_area": "Bergen",
+        "candidate_id": "LOCAL_XGB_01",
+        "validation_macro_f1": 0.45939086300608306,
+        "validation_accuracy": 0.5187728937728938,
+        "validation_macro_precision": 0.47638523225259366,
+        "validation_macro_recall": 0.5010300805769318,
+        "validation_weighted_f1": 0.4708690919176059,
+        "training_seconds": 1.3430928000016138,
+        "parameters": "{\"n_estimators\": 300, \"learning_rate\": 0.03, \"max_depth\": 5, \"min_child_weight\": 1, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Bergen",
+        "candidate_id": "LOCAL_XGB_02",
+        "validation_macro_f1": 0.46985394449624285,
+        "validation_accuracy": 0.5163308913308914,
+        "validation_macro_precision": 0.48224631759140607,
+        "validation_macro_recall": 0.4996492637480065,
+        "validation_weighted_f1": 0.48032421844980283,
+        "training_seconds": 2.558932799991453,
+        "parameters": "{\"n_estimators\": 400, \"learning_rate\": 0.03, \"max_depth\": 7, \"min_child_weight\": 1, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Bergen",
+        "candidate_id": "LOCAL_XGB_03",
+        "validation_macro_f1": 0.47155306274317016,
+        "validation_accuracy": 0.5135836385836385,
+        "validation_macro_precision": 0.4815672962084207,
+        "validation_macro_recall": 0.49757091254046776,
+        "validation_weighted_f1": 0.48158701947686916,
+        "training_seconds": 3.6346345999918412,
+        "parameters": "{\"n_estimators\": 500, \"learning_rate\": 0.03, \"max_depth\": 7, \"min_child_weight\": 3, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Bergen",
+        "candidate_id": "LOCAL_XGB_04",
+        "validation_macro_f1": 0.4739876642110788,
+        "validation_accuracy": 0.5146520146520146,
+        "validation_macro_precision": 0.48354795395917066,
+        "validation_macro_recall": 0.49891194975681,
+        "validation_weighted_f1": 0.48386773701582825,
+        "training_seconds": 2.064234999998007,
+        "parameters": "{\"n_estimators\": 350, \"learning_rate\": 0.05, \"max_depth\": 7, \"min_child_weight\": 3, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Bergen",
+        "candidate_id": "LOCAL_XGB_05",
+        "validation_macro_f1": 0.47847684721271877,
+        "validation_accuracy": 0.5146520146520146,
+        "validation_macro_precision": 0.48717886445483405,
+        "validation_macro_recall": 0.4994802235294147,
+        "validation_weighted_f1": 0.4879440893015626,
+        "training_seconds": 2.5676202000177,
+        "parameters": "{\"n_estimators\": 400, \"learning_rate\": 0.04, \"max_depth\": 8, \"min_child_weight\": 5, \"subsample\": 0.9, \"colsample_bytree\": 0.85}"
+      },
+      {
+        "study_area": "Bergen",
+        "candidate_id": "LOCAL_XGB_06",
+        "validation_macro_f1": 0.46960755683157446,
+        "validation_accuracy": 0.5007631257631258,
+        "validation_macro_precision": 0.4731171223200004,
+        "validation_macro_recall": 0.4866783332789512,
+        "validation_weighted_f1": 0.4787006154615601,
+        "training_seconds": 3.1281450999958906,
+        "parameters": "{\"n_estimators\": 350, \"learning_rate\": 0.05, \"max_depth\": 9, \"min_child_weight\": 3, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Bergen",
+        "candidate_id": "LOCAL_XGB_07",
+        "validation_macro_f1": 0.4801661311798389,
+        "validation_accuracy": 0.5186202686202687,
+        "validation_macro_precision": 0.4895579289658845,
+        "validation_macro_recall": 0.5033429609265226,
+        "validation_weighted_f1": 0.4896789529185867,
+        "training_seconds": 1.5250631000089925,
+        "parameters": "{\"n_estimators\": 300, \"learning_rate\": 0.07, \"max_depth\": 6, \"min_child_weight\": 3, \"subsample\": 0.85, \"colsample_bytree\": 0.9}"
+      }
+    ]
+  },
+  "Kristiansund": {
+    "best_candidate": {
+      "experiment": "OceanEye Local Model V3",
+      "study_area": "Kristiansund",
+      "model_family": "XGBoost",
+      "candidate_id": "LOCAL_XGB_06",
+      "parameters": {
+        "n_estimators": 350,
+        "learning_rate": 0.05,
+        "max_depth": 9,
+        "min_child_weight": 3,
+        "subsample": 0.9,
+        "colsample_bytree": 0.9
+      },
+      "selection_metric": "validation_macro_f1",
+      "validation_metrics": {
+        "accuracy": 0.4590964590964591,
+        "macro_precision": 0.45530524535006817,
+        "macro_recall": 0.4100448694440451,
+        "macro_f1": 0.37817663866143086,
+        "weighted_f1": 0.4041509922280628
+      },
+      "test_metrics": {
+        "accuracy": 0.4780244676030811,
+        "macro_precision": 0.42063823515146154,
+        "macro_recall": 0.39190096581035166,
+        "macro_f1": 0.36099486681273474,
+        "weighted_f1": 0.41446680304463585
+      },
+      "test_confusion_matrix": [
+        [
+          852,
+          109,
+          33
+        ],
+        [
+          533,
+          145,
+          64
+        ],
+        [
+          282,
+          131,
+          58
+        ]
+      ],
+      "test_classification_report": {
+        "LOW": {
+          "precision": 0.5110977804439112,
+          "recall": 0.8571428571428571,
+          "f1-score": 0.6403607666290868,
+          "support": 994.0
+        },
+        "MEDIUM": {
+          "precision": 0.37662337662337664,
+          "recall": 0.1954177897574124,
+          "f1-score": 0.2573203194321207,
+          "support": 742.0
+        },
+        "HIGH": {
+          "precision": 0.3741935483870968,
+          "recall": 0.12314225053078556,
+          "f1-score": 0.1853035143769968,
+          "support": 471.0
+        },
+        "accuracy": 0.4780244676030811,
+        "macro avg": {
+          "precision": 0.42063823515146154,
+          "recall": 0.39190096581035166,
+          "f1-score": 0.36099486681273474,
+          "support": 2207.0
+        },
+        "weighted avg": {
+          "precision": 0.43667009538111273,
+          "recall": 0.4780244676030811,
+          "f1-score": 0.41446680304463585,
+          "support": 2207.0
+        }
+      },
+      "features": [
+        "total_events",
+        "arrivals",
+        "departures",
+        "unique_vessels",
+        "passenger_events",
+        "cargo_events",
+        "fishing_events",
+        "tanker_events",
+        "auxiliary_events",
+        "tug_events",
+        "hour_local",
+        "day_of_week",
+        "month",
+        "day_of_year",
+        "is_weekend",
+        "total_events_lag_1h",
+        "total_events_lag_2h",
+        "total_events_lag_3h",
+        "total_events_lag_6h",
+        "total_events_lag_24h",
+        "arrivals_lag_1h",
+        "arrivals_lag_2h",
+        "arrivals_lag_3h",
+        "arrivals_lag_24h",
+        "departures_lag_1h",
+        "departures_lag_2h",
+        "departures_lag_3h",
+        "departures_lag_24h",
+        "unique_vessels_lag_1h",
+        "unique_vessels_lag_24h",
+        "total_events_rolling_mean_3h",
+        "total_events_rolling_mean_6h",
+        "total_events_rolling_mean_24h",
+        "arrivals_rolling_mean_3h",
+        "arrivals_rolling_mean_6h",
+        "arrivals_rolling_mean_24h",
+        "hour_sin",
+        "hour_cos",
+        "day_of_week_sin",
+        "day_of_week_cos",
+        "month_sin",
+        "month_cos"
+      ],
+      "model_file": "C:\\Projects_monika\\Diplomski-rad\\ml\\models\\local\\traffic_classifier_local_kristiansund.joblib"
+    },
+    "tuning": [
+      {
+        "study_area": "Kristiansund",
+        "candidate_id": "LOCAL_XGB_01",
+        "validation_macro_f1": 0.3670213528634725,
+        "validation_accuracy": 0.4662698412698413,
+        "validation_macro_precision": 0.4768334833892684,
+        "validation_macro_recall": 0.41248666185754707,
+        "validation_weighted_f1": 0.3936970248138416,
+        "training_seconds": 1.409153399989009,
+        "parameters": "{\"n_estimators\": 300, \"learning_rate\": 0.03, \"max_depth\": 5, \"min_child_weight\": 1, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Kristiansund",
+        "candidate_id": "LOCAL_XGB_02",
+        "validation_macro_f1": 0.373369904555552,
+        "validation_accuracy": 0.46260683760683763,
+        "validation_macro_precision": 0.46530580771652524,
+        "validation_macro_recall": 0.4122397578962027,
+        "validation_weighted_f1": 0.3979620964912869,
+        "training_seconds": 2.7395944999880157,
+        "parameters": "{\"n_estimators\": 400, \"learning_rate\": 0.03, \"max_depth\": 7, \"min_child_weight\": 1, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Kristiansund",
+        "candidate_id": "LOCAL_XGB_03",
+        "validation_macro_f1": 0.3758947608785386,
+        "validation_accuracy": 0.46321733821733824,
+        "validation_macro_precision": 0.46643593441989206,
+        "validation_macro_recall": 0.41326019575892964,
+        "validation_weighted_f1": 0.4003367249424112,
+        "training_seconds": 2.955354499979876,
+        "parameters": "{\"n_estimators\": 500, \"learning_rate\": 0.03, \"max_depth\": 7, \"min_child_weight\": 3, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Kristiansund",
+        "candidate_id": "LOCAL_XGB_04",
+        "validation_macro_f1": 0.3744340222987114,
+        "validation_accuracy": 0.46001221001221,
+        "validation_macro_precision": 0.4584455059040274,
+        "validation_macro_recall": 0.4099462354758095,
+        "validation_weighted_f1": 0.4002029255173926,
+        "training_seconds": 1.9065856999950483,
+        "parameters": "{\"n_estimators\": 350, \"learning_rate\": 0.05, \"max_depth\": 7, \"min_child_weight\": 3, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Kristiansund",
+        "candidate_id": "LOCAL_XGB_05",
+        "validation_macro_f1": 0.37206746833161136,
+        "validation_accuracy": 0.45665445665445664,
+        "validation_macro_precision": 0.4550819281122879,
+        "validation_macro_recall": 0.4071183813596017,
+        "validation_weighted_f1": 0.3974763646831504,
+        "training_seconds": 2.495685299974866,
+        "parameters": "{\"n_estimators\": 400, \"learning_rate\": 0.04, \"max_depth\": 8, \"min_child_weight\": 5, \"subsample\": 0.9, \"colsample_bytree\": 0.85}"
+      },
+      {
+        "study_area": "Kristiansund",
+        "candidate_id": "LOCAL_XGB_06",
+        "validation_macro_f1": 0.37817663866143086,
+        "validation_accuracy": 0.4590964590964591,
+        "validation_macro_precision": 0.45530524535006817,
+        "validation_macro_recall": 0.4100448694440451,
+        "validation_weighted_f1": 0.4041509922280628,
+        "training_seconds": 2.793496400001459,
+        "parameters": "{\"n_estimators\": 350, \"learning_rate\": 0.05, \"max_depth\": 9, \"min_child_weight\": 3, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Kristiansund",
+        "candidate_id": "LOCAL_XGB_07",
+        "validation_macro_f1": 0.3772497165849588,
+        "validation_accuracy": 0.4624542124542125,
+        "validation_macro_precision": 0.462901853681771,
+        "validation_macro_recall": 0.4129657827110807,
+        "validation_weighted_f1": 0.4017975003180482,
+        "training_seconds": 1.508089499984635,
+        "parameters": "{\"n_estimators\": 300, \"learning_rate\": 0.07, \"max_depth\": 6, \"min_child_weight\": 3, \"subsample\": 0.85, \"colsample_bytree\": 0.9}"
+      }
+    ]
+  },
+  "Stavanger": {
+    "best_candidate": {
+      "experiment": "OceanEye Local Model V3",
+      "study_area": "Stavanger",
+      "model_family": "XGBoost",
+      "candidate_id": "LOCAL_XGB_04",
+      "parameters": {
+        "n_estimators": 350,
+        "learning_rate": 0.05,
+        "max_depth": 7,
+        "min_child_weight": 3,
+        "subsample": 0.9,
+        "colsample_bytree": 0.9
+      },
+      "selection_metric": "validation_macro_f1",
+      "validation_metrics": {
+        "accuracy": 0.5612026862026862,
+        "macro_precision": 0.515421800507657,
+        "macro_recall": 0.5194321134606108,
+        "macro_f1": 0.4936956390244192,
+        "weighted_f1": 0.5426237160098879
+      },
+      "test_metrics": {
+        "accuracy": 0.5826914363389216,
+        "macro_precision": 0.5345946990638538,
+        "macro_recall": 0.5357299992478293,
+        "macro_f1": 0.5201775267102927,
+        "weighted_f1": 0.5765812117173497
+      },
+      "test_confusion_matrix": [
+        [
+          429,
+          111,
+          80
+        ],
+        [
+          283,
+          115,
+          116
+        ],
+        [
+          239,
+          92,
+          742
+        ]
+      ],
+      "test_classification_report": {
+        "LOW": {
+          "precision": 0.45110410094637227,
+          "recall": 0.6919354838709677,
+          "f1-score": 0.5461489497135582,
+          "support": 620.0
+        },
+        "MEDIUM": {
+          "precision": 0.36163522012578614,
+          "recall": 0.2237354085603113,
+          "f1-score": 0.2764423076923077,
+          "support": 514.0
+        },
+        "HIGH": {
+          "precision": 0.7910447761194029,
+          "recall": 0.6915191053122087,
+          "f1-score": 0.7379413227250124,
+          "support": 1073.0
+        },
+        "accuracy": 0.5826914363389216,
+        "macro avg": {
+          "precision": 0.5345946990638538,
+          "recall": 0.5357299992478293,
+          "f1-score": 0.5201775267102927,
+          "support": 2207.0
+        },
+        "weighted avg": {
+          "precision": 0.5955396875883662,
+          "recall": 0.5826914363389216,
+          "f1-score": 0.5765812117173497,
+          "support": 2207.0
+        }
+      },
+      "features": [
+        "total_events",
+        "arrivals",
+        "departures",
+        "unique_vessels",
+        "passenger_events",
+        "cargo_events",
+        "fishing_events",
+        "tanker_events",
+        "auxiliary_events",
+        "tug_events",
+        "hour_local",
+        "day_of_week",
+        "month",
+        "day_of_year",
+        "is_weekend",
+        "total_events_lag_1h",
+        "total_events_lag_2h",
+        "total_events_lag_3h",
+        "total_events_lag_6h",
+        "total_events_lag_24h",
+        "arrivals_lag_1h",
+        "arrivals_lag_2h",
+        "arrivals_lag_3h",
+        "arrivals_lag_24h",
+        "departures_lag_1h",
+        "departures_lag_2h",
+        "departures_lag_3h",
+        "departures_lag_24h",
+        "unique_vessels_lag_1h",
+        "unique_vessels_lag_24h",
+        "total_events_rolling_mean_3h",
+        "total_events_rolling_mean_6h",
+        "total_events_rolling_mean_24h",
+        "arrivals_rolling_mean_3h",
+        "arrivals_rolling_mean_6h",
+        "arrivals_rolling_mean_24h",
+        "hour_sin",
+        "hour_cos",
+        "day_of_week_sin",
+        "day_of_week_cos",
+        "month_sin",
+        "month_cos"
+      ],
+      "model_file": "C:\\Projects_monika\\Diplomski-rad\\ml\\models\\local\\traffic_classifier_local_stavanger.joblib"
+    },
+    "tuning": [
+      {
+        "study_area": "Stavanger",
+        "candidate_id": "LOCAL_XGB_01",
+        "validation_macro_f1": 0.4933107023333822,
+        "validation_accuracy": 0.5731074481074481,
+        "validation_macro_precision": 0.513038106539791,
+        "validation_macro_recall": 0.5222666707676916,
+        "validation_weighted_f1": 0.5459451161931196,
+        "training_seconds": 1.500347299996065,
+        "parameters": "{\"n_estimators\": 300, \"learning_rate\": 0.03, \"max_depth\": 5, \"min_child_weight\": 1, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Stavanger",
+        "candidate_id": "LOCAL_XGB_02",
+        "validation_macro_f1": 0.49018712000836856,
+        "validation_accuracy": 0.5651709401709402,
+        "validation_macro_precision": 0.5057861032424017,
+        "validation_macro_recall": 0.5169238078728227,
+        "validation_weighted_f1": 0.5418908383922121,
+        "training_seconds": 2.6699345000088215,
+        "parameters": "{\"n_estimators\": 400, \"learning_rate\": 0.03, \"max_depth\": 7, \"min_child_weight\": 1, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Stavanger",
+        "candidate_id": "LOCAL_XGB_03",
+        "validation_macro_f1": 0.490403766528396,
+        "validation_accuracy": 0.5634920634920635,
+        "validation_macro_precision": 0.5116587791398278,
+        "validation_macro_recall": 0.5172933116678903,
+        "validation_weighted_f1": 0.5410965676123359,
+        "training_seconds": 3.0893952999904286,
+        "parameters": "{\"n_estimators\": 500, \"learning_rate\": 0.03, \"max_depth\": 7, \"min_child_weight\": 3, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Stavanger",
+        "candidate_id": "LOCAL_XGB_04",
+        "validation_macro_f1": 0.4936956390244192,
+        "validation_accuracy": 0.5612026862026862,
+        "validation_macro_precision": 0.515421800507657,
+        "validation_macro_recall": 0.5194321134606108,
+        "validation_weighted_f1": 0.5426237160098879,
+        "training_seconds": 2.201844600000186,
+        "parameters": "{\"n_estimators\": 350, \"learning_rate\": 0.05, \"max_depth\": 7, \"min_child_weight\": 3, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Stavanger",
+        "candidate_id": "LOCAL_XGB_05",
+        "validation_macro_f1": 0.49037369828621946,
+        "validation_accuracy": 0.5608974358974359,
+        "validation_macro_precision": 0.5042508560876348,
+        "validation_macro_recall": 0.5157149090072796,
+        "validation_weighted_f1": 0.5417277964022892,
+        "training_seconds": 2.7687901000026613,
+        "parameters": "{\"n_estimators\": 400, \"learning_rate\": 0.04, \"max_depth\": 8, \"min_child_weight\": 5, \"subsample\": 0.9, \"colsample_bytree\": 0.85}"
+      },
+      {
+        "study_area": "Stavanger",
+        "candidate_id": "LOCAL_XGB_06",
+        "validation_macro_f1": 0.48767341290953503,
+        "validation_accuracy": 0.5564713064713065,
+        "validation_macro_precision": 0.5057354910447304,
+        "validation_macro_recall": 0.5128607129096853,
+        "validation_weighted_f1": 0.5374072231063853,
+        "training_seconds": 3.065852699975949,
+        "parameters": "{\"n_estimators\": 350, \"learning_rate\": 0.05, \"max_depth\": 9, \"min_child_weight\": 3, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Stavanger",
+        "candidate_id": "LOCAL_XGB_07",
+        "validation_macro_f1": 0.4885070061405985,
+        "validation_accuracy": 0.561050061050061,
+        "validation_macro_precision": 0.5088334261872305,
+        "validation_macro_recall": 0.5156579747496018,
+        "validation_weighted_f1": 0.5393494931340246,
+        "training_seconds": 1.5867563000065275,
+        "parameters": "{\"n_estimators\": 300, \"learning_rate\": 0.07, \"max_depth\": 6, \"min_child_weight\": 3, \"subsample\": 0.85, \"colsample_bytree\": 0.9}"
+      }
+    ]
+  },
+  "Tromsø": {
+    "best_candidate": {
+      "experiment": "OceanEye Local Model V3",
+      "study_area": "Tromsø",
+      "model_family": "XGBoost",
+      "candidate_id": "LOCAL_XGB_01",
+      "parameters": {
+        "n_estimators": 300,
+        "learning_rate": 0.03,
+        "max_depth": 5,
+        "min_child_weight": 1,
+        "subsample": 0.9,
+        "colsample_bytree": 0.9
+      },
+      "selection_metric": "validation_macro_f1",
+      "validation_metrics": {
+        "accuracy": 0.7301587301587301,
+        "macro_precision": 0.6659364471171533,
+        "macro_recall": 0.6786025347964503,
+        "macro_f1": 0.6715079860608281,
+        "weighted_f1": 0.7326962342018803
+      },
+      "test_metrics": {
+        "accuracy": 0.6918894426823743,
+        "macro_precision": 0.6402263727079444,
+        "macro_recall": 0.6390989336552398,
+        "macro_f1": 0.6378131715721692,
+        "weighted_f1": 0.6840869254636424
+      },
+      "test_confusion_matrix": [
+        [
+          220,
+          137,
+          29
+        ],
+        [
+          159,
+          336,
+          216
+        ],
+        [
+          13,
+          126,
+          971
+        ]
+      ],
+      "test_classification_report": {
+        "LOW": {
+          "precision": 0.5612244897959183,
+          "recall": 0.5699481865284974,
+          "f1-score": 0.5655526992287918,
+          "support": 386.0
+        },
+        "MEDIUM": {
+          "precision": 0.5609348914858097,
+          "recall": 0.47257383966244726,
+          "f1-score": 0.5129770992366413,
+          "support": 711.0
+        },
+        "HIGH": {
+          "precision": 0.7985197368421053,
+          "recall": 0.8747747747747747,
+          "f1-score": 0.8349097162510748,
+          "support": 1110.0
+        },
+        "accuracy": 0.6918894426823743,
+        "macro avg": {
+          "precision": 0.6402263727079444,
+          "recall": 0.6390989336552398,
+          "f1-score": 0.6378131715721692,
+          "support": 2207.0
+        },
+        "weighted avg": {
+          "precision": 0.6804776931592079,
+          "recall": 0.6918894426823743,
+          "f1-score": 0.6840869254636424,
+          "support": 2207.0
+        }
+      },
+      "features": [
+        "total_events",
+        "arrivals",
+        "departures",
+        "unique_vessels",
+        "passenger_events",
+        "cargo_events",
+        "fishing_events",
+        "tanker_events",
+        "auxiliary_events",
+        "tug_events",
+        "hour_local",
+        "day_of_week",
+        "month",
+        "day_of_year",
+        "is_weekend",
+        "total_events_lag_1h",
+        "total_events_lag_2h",
+        "total_events_lag_3h",
+        "total_events_lag_6h",
+        "total_events_lag_24h",
+        "arrivals_lag_1h",
+        "arrivals_lag_2h",
+        "arrivals_lag_3h",
+        "arrivals_lag_24h",
+        "departures_lag_1h",
+        "departures_lag_2h",
+        "departures_lag_3h",
+        "departures_lag_24h",
+        "unique_vessels_lag_1h",
+        "unique_vessels_lag_24h",
+        "total_events_rolling_mean_3h",
+        "total_events_rolling_mean_6h",
+        "total_events_rolling_mean_24h",
+        "arrivals_rolling_mean_3h",
+        "arrivals_rolling_mean_6h",
+        "arrivals_rolling_mean_24h",
+        "hour_sin",
+        "hour_cos",
+        "day_of_week_sin",
+        "day_of_week_cos",
+        "month_sin",
+        "month_cos"
+      ],
+      "model_file": "C:\\Projects_monika\\Diplomski-rad\\ml\\models\\local\\traffic_classifier_local_tromso.joblib"
+    },
+    "tuning": [
+      {
+        "study_area": "Tromsø",
+        "candidate_id": "LOCAL_XGB_01",
+        "validation_macro_f1": 0.6715079860608281,
+        "validation_accuracy": 0.7301587301587301,
+        "validation_macro_precision": 0.6659364471171533,
+        "validation_macro_recall": 0.6786025347964503,
+        "validation_weighted_f1": 0.7326962342018803,
+        "training_seconds": 1.505956500011962,
+        "parameters": "{\"n_estimators\": 300, \"learning_rate\": 0.03, \"max_depth\": 5, \"min_child_weight\": 1, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Tromsø",
+        "candidate_id": "LOCAL_XGB_02",
+        "validation_macro_f1": 0.6692591431236444,
+        "validation_accuracy": 0.729090354090354,
+        "validation_macro_precision": 0.6632200331707803,
+        "validation_macro_recall": 0.6774528707885409,
+        "validation_weighted_f1": 0.7332893008096073,
+        "training_seconds": 2.527128999994602,
+        "parameters": "{\"n_estimators\": 400, \"learning_rate\": 0.03, \"max_depth\": 7, \"min_child_weight\": 1, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Tromsø",
+        "candidate_id": "LOCAL_XGB_03",
+        "validation_macro_f1": 0.6706346568025955,
+        "validation_accuracy": 0.7287851037851037,
+        "validation_macro_precision": 0.6647298499758324,
+        "validation_macro_recall": 0.6787541266949136,
+        "validation_weighted_f1": 0.7335665027782288,
+        "training_seconds": 3.191374199988786,
+        "parameters": "{\"n_estimators\": 500, \"learning_rate\": 0.03, \"max_depth\": 7, \"min_child_weight\": 3, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Tromsø",
+        "candidate_id": "LOCAL_XGB_04",
+        "validation_macro_f1": 0.6666969062513713,
+        "validation_accuracy": 0.7263431013431013,
+        "validation_macro_precision": 0.6605517865400762,
+        "validation_macro_recall": 0.6754517922555082,
+        "validation_weighted_f1": 0.7315254456978353,
+        "training_seconds": 2.094516699988162,
+        "parameters": "{\"n_estimators\": 350, \"learning_rate\": 0.05, \"max_depth\": 7, \"min_child_weight\": 3, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Tromsø",
+        "candidate_id": "LOCAL_XGB_05",
+        "validation_macro_f1": 0.6652813822445751,
+        "validation_accuracy": 0.7246642246642246,
+        "validation_macro_precision": 0.658548608843963,
+        "validation_macro_recall": 0.67509334077582,
+        "validation_weighted_f1": 0.7297357444443942,
+        "training_seconds": 2.8160819000040647,
+        "parameters": "{\"n_estimators\": 400, \"learning_rate\": 0.04, \"max_depth\": 8, \"min_child_weight\": 5, \"subsample\": 0.9, \"colsample_bytree\": 0.85}"
+      },
+      {
+        "study_area": "Tromsø",
+        "candidate_id": "LOCAL_XGB_06",
+        "validation_macro_f1": 0.6615947689257838,
+        "validation_accuracy": 0.7205433455433455,
+        "validation_macro_precision": 0.6556016611454286,
+        "validation_macro_recall": 0.6705013778031733,
+        "validation_weighted_f1": 0.7264668630957627,
+        "training_seconds": 3.1426430999999866,
+        "parameters": "{\"n_estimators\": 350, \"learning_rate\": 0.05, \"max_depth\": 9, \"min_child_weight\": 3, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Tromsø",
+        "candidate_id": "LOCAL_XGB_07",
+        "validation_macro_f1": 0.6668717389507859,
+        "validation_accuracy": 0.7272588522588522,
+        "validation_macro_precision": 0.6608273181549899,
+        "validation_macro_recall": 0.6752959326837525,
+        "validation_weighted_f1": 0.732002835079756,
+        "training_seconds": 1.5695092999958433,
+        "parameters": "{\"n_estimators\": 300, \"learning_rate\": 0.07, \"max_depth\": 6, \"min_child_weight\": 3, \"subsample\": 0.85, \"colsample_bytree\": 0.9}"
+      }
+    ]
+  },
+  "Ålesund": {
+    "best_candidate": {
+      "experiment": "OceanEye Local Model V3",
+      "study_area": "Ålesund",
+      "model_family": "XGBoost",
+      "candidate_id": "LOCAL_XGB_06",
+      "parameters": {
+        "n_estimators": 350,
+        "learning_rate": 0.05,
+        "max_depth": 9,
+        "min_child_weight": 3,
+        "subsample": 0.9,
+        "colsample_bytree": 0.9
+      },
+      "selection_metric": "validation_macro_f1",
+      "validation_metrics": {
+        "accuracy": 0.8398962148962149,
+        "macro_precision": 0.7563378130030172,
+        "macro_recall": 0.7374170540236138,
+        "macro_f1": 0.7446462544452522,
+        "weighted_f1": 0.8362470182268948
+      },
+      "test_metrics": {
+        "accuracy": 0.8491164476665156,
+        "macro_precision": 0.783823065842836,
+        "macro_recall": 0.7612489818432874,
+        "macro_f1": 0.770556245541059,
+        "weighted_f1": 0.8454291471972982
+      },
+      "test_confusion_matrix": [
+        [
+          117,
+          125,
+          0
+        ],
+        [
+          80,
+          979,
+          77
+        ],
+        [
+          0,
+          51,
+          778
+        ]
+      ],
+      "test_classification_report": {
+        "LOW": {
+          "precision": 0.5939086294416244,
+          "recall": 0.4834710743801653,
+          "f1-score": 0.5330296127562643,
+          "support": 242.0
+        },
+        "MEDIUM": {
+          "precision": 0.8476190476190476,
+          "recall": 0.8617957746478874,
+          "f1-score": 0.8546486250545613,
+          "support": 1136.0
+        },
+        "HIGH": {
+          "precision": 0.9099415204678363,
+          "recall": 0.9384800965018094,
+          "f1-score": 0.9239904988123515,
+          "support": 829.0
+        },
+        "accuracy": 0.8491164476665156,
+        "macro avg": {
+          "precision": 0.783823065842836,
+          "recall": 0.7612489818432874,
+          "f1-score": 0.770556245541059,
+          "support": 2207.0
+        },
+        "weighted avg": {
+          "precision": 0.8432091739410726,
+          "recall": 0.8491164476665156,
+          "f1-score": 0.8454291471972982,
+          "support": 2207.0
+        }
+      },
+      "features": [
+        "total_events",
+        "arrivals",
+        "departures",
+        "unique_vessels",
+        "passenger_events",
+        "cargo_events",
+        "fishing_events",
+        "tanker_events",
+        "auxiliary_events",
+        "tug_events",
+        "hour_local",
+        "day_of_week",
+        "month",
+        "day_of_year",
+        "is_weekend",
+        "total_events_lag_1h",
+        "total_events_lag_2h",
+        "total_events_lag_3h",
+        "total_events_lag_6h",
+        "total_events_lag_24h",
+        "arrivals_lag_1h",
+        "arrivals_lag_2h",
+        "arrivals_lag_3h",
+        "arrivals_lag_24h",
+        "departures_lag_1h",
+        "departures_lag_2h",
+        "departures_lag_3h",
+        "departures_lag_24h",
+        "unique_vessels_lag_1h",
+        "unique_vessels_lag_24h",
+        "total_events_rolling_mean_3h",
+        "total_events_rolling_mean_6h",
+        "total_events_rolling_mean_24h",
+        "arrivals_rolling_mean_3h",
+        "arrivals_rolling_mean_6h",
+        "arrivals_rolling_mean_24h",
+        "hour_sin",
+        "hour_cos",
+        "day_of_week_sin",
+        "day_of_week_cos",
+        "month_sin",
+        "month_cos"
+      ],
+      "model_file": "C:\\Projects_monika\\Diplomski-rad\\ml\\models\\local\\traffic_classifier_local_alesund.joblib"
+    },
+    "tuning": [
+      {
+        "study_area": "Ålesund",
+        "candidate_id": "LOCAL_XGB_01",
+        "validation_macro_f1": 0.6853615588932191,
+        "validation_accuracy": 0.8264652014652014,
+        "validation_macro_precision": 0.7603500155034815,
+        "validation_macro_recall": 0.6685735254318752,
+        "validation_weighted_f1": 0.8126129010385174,
+        "training_seconds": 1.5330870000179857,
+        "parameters": "{\"n_estimators\": 300, \"learning_rate\": 0.03, \"max_depth\": 5, \"min_child_weight\": 1, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Ålesund",
+        "candidate_id": "LOCAL_XGB_02",
+        "validation_macro_f1": 0.7310355420230894,
+        "validation_accuracy": 0.8414224664224664,
+        "validation_macro_precision": 0.7624200838852547,
+        "validation_macro_recall": 0.7157317654876922,
+        "validation_weighted_f1": 0.8345212143963414,
+        "training_seconds": 2.992267299996456,
+        "parameters": "{\"n_estimators\": 400, \"learning_rate\": 0.03, \"max_depth\": 7, \"min_child_weight\": 1, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Ålesund",
+        "candidate_id": "LOCAL_XGB_03",
+        "validation_macro_f1": 0.7338693843411868,
+        "validation_accuracy": 0.8408119658119658,
+        "validation_macro_precision": 0.7605582580641936,
+        "validation_macro_recall": 0.7199769219811604,
+        "validation_weighted_f1": 0.8346374911067077,
+        "training_seconds": 4.703343200002564,
+        "parameters": "{\"n_estimators\": 500, \"learning_rate\": 0.03, \"max_depth\": 7, \"min_child_weight\": 3, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Ålesund",
+        "candidate_id": "LOCAL_XGB_04",
+        "validation_macro_f1": 0.7389483858805045,
+        "validation_accuracy": 0.8403540903540904,
+        "validation_macro_precision": 0.7580860260313947,
+        "validation_macro_recall": 0.7280328630738002,
+        "validation_weighted_f1": 0.8353585464804242,
+        "training_seconds": 2.2207254999957513,
+        "parameters": "{\"n_estimators\": 350, \"learning_rate\": 0.05, \"max_depth\": 7, \"min_child_weight\": 3, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Ålesund",
+        "candidate_id": "LOCAL_XGB_05",
+        "validation_macro_f1": 0.7385613927992768,
+        "validation_accuracy": 0.8388278388278388,
+        "validation_macro_precision": 0.755893681306491,
+        "validation_macro_recall": 0.7284588569100022,
+        "validation_weighted_f1": 0.8341251882084945,
+        "training_seconds": 3.2076626000052784,
+        "parameters": "{\"n_estimators\": 400, \"learning_rate\": 0.04, \"max_depth\": 8, \"min_child_weight\": 5, \"subsample\": 0.9, \"colsample_bytree\": 0.85}"
+      },
+      {
+        "study_area": "Ålesund",
+        "candidate_id": "LOCAL_XGB_06",
+        "validation_macro_f1": 0.7446462544452522,
+        "validation_accuracy": 0.8398962148962149,
+        "validation_macro_precision": 0.7563378130030172,
+        "validation_macro_recall": 0.7374170540236138,
+        "validation_weighted_f1": 0.8362470182268948,
+        "training_seconds": 3.114083600026788,
+        "parameters": "{\"n_estimators\": 350, \"learning_rate\": 0.05, \"max_depth\": 9, \"min_child_weight\": 3, \"subsample\": 0.9, \"colsample_bytree\": 0.9}"
+      },
+      {
+        "study_area": "Ålesund",
+        "candidate_id": "LOCAL_XGB_07",
+        "validation_macro_f1": 0.735137792196432,
+        "validation_accuracy": 0.8395909645909646,
+        "validation_macro_precision": 0.7661825854349028,
+        "validation_macro_recall": 0.7195706699310364,
+        "validation_weighted_f1": 0.8331723017070554,
+        "training_seconds": 1.9352158999827225,
+        "parameters": "{\"n_estimators\": 300, \"learning_rate\": 0.07, \"max_depth\": 6, \"min_child_weight\": 3, \"subsample\": 0.85, \"colsample_bytree\": 0.9}"
+      }
+    ]
+  }
+}

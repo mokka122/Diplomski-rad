@@ -1,43 +1,178 @@
-# Node
-node_modules/
-dist/
+# ======================================================================================
+# OCEANEYE - GITIGNORE
+# ======================================================================================
 
-# Python
-venv/
-__pycache__/
-*.pyc
 
-# Environment
+# ======================================================================================
+# ENVIRONMENT / SECRETS
+# ======================================================================================
+
 .env
+.env.*
 
-# VSCode
-.vscode/
-
-# Logs
-*.log
-
-# OS
-.DS_Store
-Thumbs.db
-
-# ML datasets - local only
-ml/data/raw/
-ml/data/processed/
-ml/data/features/*.csv
-
-# Trained ML models
-ml/models/
-*.joblib
-
-# Environment files
 backend/.env
 frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.production.local
 
-# Python
+# Safe example files are allowed in Git
+!.env.example
+!backend/.env.production.example
+!frontend/.env.example
+
+
+# ======================================================================================
+# PYTHON
+# ======================================================================================
+
+venv/
+.venv/
 backend/venv/
-__pycache__/
-*.pyc
 
-# Frontend
+__pycache__/
+**/__pycache__/
+
+*.pyc
+*.pyo
+*.pyd
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+.coverage
+htmlcov/
+
+
+# ======================================================================================
+# NODE / VITE
+# ======================================================================================
+
+node_modules/
 frontend/node_modules/
+
+dist/
 frontend/dist/
+
+.vite/
+frontend/.vite/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# ======================================================================================
+# IDE / EDITOR
+# ======================================================================================
+
+.vscode/
+.idea/
+
+*.swp
+*.swo
+
+
+# ======================================================================================
+# OPERATING SYSTEM
+# ======================================================================================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+
+# ======================================================================================
+# LOGS / TEMPORARY FILES
+# ======================================================================================
+
+*.log
+*.tmp
+*.temp
+*.bak
+
+logs/
+tmp/
+temp/
+
+
+# ======================================================================================
+# ML RAW / PROCESSED DATASETS
+#
+# Historical SafeSeaNet datasets can be very large and should remain local.
+# ======================================================================================
+
+ml/data/raw/
+ml/data/processed/
+
+ml/data/features/*.csv
+
+
+# ======================================================================================
+# ML MODELS
+#
+# Keep the directory visible to Git, ignore its contents,
+# then explicitly allow only the selected production artifacts.
+# ======================================================================================
+
+ml/models/*
+!ml/models/traffic_classifier_multi_area_tuned.joblib
+!ml/models/traffic_classifier_multi_area_tuned_metadata.json
+
+
+# ======================================================================================
+# GENERAL MODEL ARTIFACTS
+# ======================================================================================
+
+*.joblib
+
+# Explicitly allow the selected production model.
+!ml/models/traffic_classifier_multi_area_tuned.joblib
+
+
+# ======================================================================================
+# LOCAL BENCHMARK / PERFORMANCE DIAGNOSTIC SCRIPTS
+#
+# Used while diagnosing MongoDB / Kafka throughput.
+# They are not part of the production application.
+# ======================================================================================
+
+backend/test_current_bulk_real.py
+backend/test_es_latency.py
+backend/test_mongo_bulk.py
+backend/test_mongo_concurrency.py
+backend/test_mongo_history_insert.py
+backend/test_mongo_index_overhead.py
+backend/test_mongo_indexes.py
+backend/test_mongo_latency.py
+backend/test_mongo_single_upsert.py
+backend/test_real_history_collection.py
+
+
+# ======================================================================================
+# JUPYTER
+# ======================================================================================
+
+.ipynb_checkpoints/
+
+
+# ======================================================================================
+# PYTHON BUILD ARTIFACTS
+# ======================================================================================
+
+build/
+*.egg-info/
+.eggs/
+
+
+# ======================================================================================
+# LOCAL DATABASE / CACHE FILES
+# ======================================================================================
+
+*.sqlite
+*.sqlite3
+
+dump.rdb
+appendonly.aof

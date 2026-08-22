@@ -23,6 +23,10 @@ from app.services.live_feature_builder import (
     live_feature_builder,
 )
 
+from app.ml.config import (
+    FEATURE_COLUMNS,
+)
+
 
 router = APIRouter(
     prefix="/prediction",
@@ -140,29 +144,56 @@ async def predict_live_traffic():
             ->
         Redis hourly aggregates
             ->
-        42 ML features
+        45 ML features
             ->
         TrafficPredictor
 
     Until a trained model exists, this endpoint
     intentionally returns HTTP 503.
     """
-
     try:
+
+        history_readiness = (
+            await live_feature_builder
+            .get_history_readiness()
+        )
+
+        if not history_readiness[
+            "ready"
+        ]:
+
+            raise HTTPException(
+                status_code=(
+                    status.HTTP_503_SERVICE_UNAVAILABLE
+                ),
+                detail={
+                    "message":
+                        "Live ML history is not ready.",
+
+                    "available_required_hours":
+                        history_readiness[
+                            "available_required_hours"
+                        ],
+
+                    "required_hours":
+                        history_readiness[
+                            "required_hours"
+                        ],
+
+                    "missing_hours":
+                        history_readiness[
+                            "missing_hours"
+                        ],
+                },
+            )
+
         live_data = (
             await live_feature_builder
             .build_features()
         )
 
-        features = live_data[
-            "features"
-        ]
-
-        result = traffic_predictor.predict(
-            features
-        )
-
-        return result
+    except HTTPException:
+        raise
 
     except ModelNotAvailableError as exc:
 
@@ -220,7 +251,7 @@ async def get_live_prediction_status():
 
     Checks:
 
-    - 42 feature contract
+    - final Multi-Area feature contract
     - availability of required live history
     - trained model availability
     """
@@ -244,7 +275,9 @@ async def get_live_prediction_status():
         live_data[
             "feature_count"
         ]
-        == 42
+        == len(
+            FEATURE_COLUMNS
+        )
     )
 
     ready_for_prediction = (

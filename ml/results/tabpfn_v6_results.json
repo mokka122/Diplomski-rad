@@ -1,0 +1,112 @@
+{
+  "experiment": "OceanEye V6 TabPFN Foundation Model",
+  "model_family": "TabPFN",
+  "device": "cuda",
+  "full_training_rows": 219120,
+  "tabpfn_training_rows": 10000,
+  "cpu_subset_used": false,
+  "fit_seconds": 1.894672000024002,
+  "validation_inference_seconds": 1557.8955862000003,
+  "test_inference_seconds": 533.6753073,
+  "validation_metrics": {
+    "accuracy": 0.5973443223443223,
+    "macro_precision": 0.594672902805013,
+    "macro_recall": 0.595079280773637,
+    "macro_f1": 0.5815426685706164,
+    "weighted_f1": 0.5920990317726851
+  },
+  "test_metrics": {
+    "accuracy": 0.5979157227004984,
+    "macro_precision": 0.6009724758549462,
+    "macro_recall": 0.5991617363421419,
+    "macro_f1": 0.5882404264946012,
+    "weighted_f1": 0.5922693999951667
+  },
+  "per_area_test": {
+    "Bergen": {
+      "accuracy": 0.47983688264612595,
+      "macro_precision": 0.418265826019871,
+      "macro_recall": 0.4497704918896422,
+      "macro_f1": 0.40499890478922507,
+      "weighted_f1": 0.42326293281355376
+    },
+    "Kristiansund": {
+      "accuracy": 0.46443135478024467,
+      "macro_precision": 0.4263658985177973,
+      "macro_recall": 0.3590615653756426,
+      "macro_f1": 0.27396825608321856,
+      "weighted_f1": 0.3341629239173695
+    },
+    "Stavanger": {
+      "accuracy": 0.5845038513819665,
+      "macro_precision": 0.5107023597142988,
+      "macro_recall": 0.49474202824769603,
+      "macro_f1": 0.4580072847269904,
+      "weighted_f1": 0.5294871485481032
+    },
+    "Tromsø": {
+      "accuracy": 0.6610783869506117,
+      "macro_precision": 0.641849459179581,
+      "macro_recall": 0.5452274468999071,
+      "macro_f1": 0.5343810380517402,
+      "weighted_f1": 0.632155730450489
+    },
+    "Ålesund": {
+      "accuracy": 0.7997281377435432,
+      "macro_precision": 0.7842435133672564,
+      "macro_recall": 0.652729298860886,
+      "macro_f1": 0.6660144582970225,
+      "weighted_f1": 0.7790441224246909
+    }
+  },
+  "confusion_matrix": [
+    [
+      2131,
+      592,
+      436
+    ],
+    [
+      1385,
+      1541,
+      867
+    ],
+    [
+      788,
+      369,
+      2926
+    ]
+  ],
+  "classification_report": {
+    "LOW": {
+      "precision": 0.4951208178438662,
+      "recall": 0.6745805634694524,
+      "f1-score": 0.5710840144713922,
+      "support": 3159.0
+    },
+    "MEDIUM": {
+      "precision": 0.6159072741806555,
+      "recall": 0.40627471658317954,
+      "f1-score": 0.48959491660047655,
+      "support": 3793.0
+    },
+    "HIGH": {
+      "precision": 0.6918893355403168,
+      "recall": 0.7166299289737937,
+      "f1-score": 0.7040423484119346,
+      "support": 4083.0
+    },
+    "accuracy": 0.5979157227004984,
+    "macro avg": {
+      "precision": 0.6009724758549462,
+      "recall": 0.5991617363421419,
+      "f1-score": 0.5882404264946012,
+      "support": 11035.0
+    },
+    "weighted avg": {
+      "precision": 0.609443326828012,
+      "recall": 0.5979157227004984,
+      "f1-score": 0.5922693999951667,
+      "support": 11035.0
+    }
+  }
+}

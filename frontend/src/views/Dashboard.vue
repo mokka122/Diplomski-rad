@@ -5,7 +5,13 @@ import {
   onMounted,
   onUnmounted,
   ref,
+  watch,
 } from "vue";
+
+import {
+  useRoute,
+  useRouter,
+} from "vue-router";
 
 import AppHeader from "../components/AppHeader.vue";
 import MetricCard from "../components/dashboard/MetricCard.vue";
@@ -16,122 +22,347 @@ import VesselMap from "../components/VesselMap.vue";
 import {
   getCurrentTraffic,
   getCurrentVessels,
+  getLivePrediction,
   getPredictionStatus,
   getVesselHistory,
 } from "../services/api";
 
 
-const vessels = ref([]);
-const selectedVessel = ref(null);
-
-const vesselHistory = ref([]);
-const historyLoading = ref(false);
-const historyError = ref("");
-
-const traffic = ref(null);
-const predictionStatus = ref(null);
-
-const isLoading = ref(true);
-const trafficLoading = ref(true);
-const predictionLoading = ref(true);
-
-const errorMessage = ref("");
-const trafficError = ref("");
-
-const lastUpdated = ref(null);
-
-const vesselDetailsElement = ref(null);
-
-let refreshTimer = null;
+const route = useRoute();
+const router = useRouter();
 
 
-const vesselCount = computed(() => {
-  return vessels.value.length;
-});
+const vessels =
+  ref([]);
+
+const selectedVessel =
+  ref(null);
+
+const vesselHistory =
+  ref([]);
+
+const historyLoading =
+  ref(false);
+
+const historyError =
+  ref("");
+
+const traffic =
+  ref(null);
+
+const predictionStatus =
+  ref(null);
+
+const prediction =
+  ref(null);
+
+const isLoading =
+  ref(true);
+
+const trafficLoading =
+  ref(true);
+
+const predictionLoading =
+  ref(true);
+
+const errorMessage =
+  ref("");
+
+const trafficError =
+  ref("");
+
+const predictionError =
+  ref("");
+
+const lastUpdated =
+  ref(null);
+
+const vesselDetailsElement =
+  ref(null);
+
+let refreshTimer =
+  null;
 
 
-const averageSpeed = computed(() => {
-  const speeds = vessels.value
-    .map((vessel) => Number(vessel.sog))
-    .filter((value) => Number.isFinite(value));
+/* =========================================================
+   BASIC METRICS
+   ========================================================= */
 
-  if (!speeds.length) {
-    return "—";
+const vesselCount =
+  computed(
+    () =>
+      vessels.value.length,
+  );
+
+
+const averageSpeed =
+  computed(() => {
+    const speeds =
+      vessels.value
+        .map(
+          (vessel) =>
+            Number(
+              vessel.sog,
+            ),
+        )
+        .filter(
+          (value) =>
+            Number.isFinite(
+              value,
+            ),
+        );
+
+    if (
+      !speeds.length
+    ) {
+      return "—";
+    }
+
+    const average =
+      speeds.reduce(
+        (
+          sum,
+          value,
+        ) =>
+          sum + value,
+        0,
+      ) /
+      speeds.length;
+
+    return average
+      .toFixed(1);
+  });
+
+
+const trafficEvents =
+  computed(
+    () =>
+      traffic.value
+        ?.total_events ??
+      0,
+  );
+
+
+const arrivals =
+  computed(
+    () =>
+      traffic.value
+        ?.arrivals ??
+      0,
+  );
+
+
+const departures =
+  computed(
+    () =>
+      traffic.value
+        ?.departures ??
+      0,
+  );
+
+
+/* =========================================================
+   LIVE VESSEL COMPOSITION
+   ========================================================= */
+
+function vesselGroup(
+  shipType,
+) {
+  const value =
+    Number(
+      shipType,
+    );
+
+  if (
+    !Number.isFinite(
+      value,
+    )
+  ) {
+    return "other";
   }
 
-  const average =
-    speeds.reduce(
-      (sum, value) => sum + value,
-      0,
-    ) / speeds.length;
+  if (
+    value === 30
+  ) {
+    return "fishing";
+  }
 
-  return average.toFixed(1);
-});
+  if (
+    value === 31 ||
+    value === 32 ||
+    value === 52
+  ) {
+    return "tug";
+  }
+
+  if (
+    value >= 60 &&
+    value <= 69
+  ) {
+    return "passenger";
+  }
+
+  if (
+    value >= 70 &&
+    value <= 79
+  ) {
+    return "cargo";
+  }
+
+  if (
+    value >= 80 &&
+    value <= 89
+  ) {
+    return "tanker";
+  }
+
+  if (
+    [
+      33,
+      34,
+      35,
+      50,
+      51,
+      53,
+      54,
+      55,
+      58,
+      59,
+    ].includes(
+      value,
+    )
+  ) {
+    return "auxiliary";
+  }
+
+  return "other";
+}
 
 
-const trafficEvents = computed(() => {
-  return traffic.value?.total_events ?? 0;
-});
+const vesselComposition =
+  computed(() => {
+    const result = {
+      passenger:
+        0,
+
+      cargo:
+        0,
+
+      fishing:
+        0,
+
+      tanker:
+        0,
+
+      auxiliary:
+        0,
+
+      tug:
+        0,
+
+      other:
+        0,
+    };
+
+    vessels.value
+      .forEach(
+        (vessel) => {
+          const group =
+            vesselGroup(
+              vessel.ship_type,
+            );
+
+          result[group] +=
+            1;
+        },
+      );
+
+    return result;
+  });
 
 
-const arrivals = computed(() => {
-  return traffic.value?.arrivals ?? 0;
-});
+/* =========================================================
+   FORMATTERS
+   ========================================================= */
 
-
-const departures = computed(() => {
-  return traffic.value?.departures ?? 0;
-});
-
-
-function formatTimestamp(timestamp) {
+function formatTimestamp(
+  timestamp,
+) {
   if (!timestamp) {
     return "—";
   }
 
-  return new Date(timestamp).toLocaleString(
+  return new Date(
+    timestamp,
+  ).toLocaleString(
     "en-GB",
     {
-      dateStyle: "medium",
-      timeStyle: "short",
+      dateStyle:
+        "medium",
+
+      timeStyle:
+        "short",
     },
   );
 }
 
 
+/* =========================================================
+   LOAD VESSELS
+   ========================================================= */
+
 async function loadVessels() {
   try {
-    errorMessage.value = "";
+    errorMessage.value =
+      "";
 
-    const data = await getCurrentVessels();
+    const data =
+      await getCurrentVessels();
 
-    vessels.value = data.vessels ?? [];
+    vessels.value =
+      data.vessels ??
+      [];
 
-    if (selectedVessel.value) {
-      const updatedVessel =
-        vessels.value.find(
-          (vessel) =>
-            vessel.mmsi ===
-            selectedVessel.value.mmsi,
-        );
+    if (
+      selectedVessel.value
+    ) {
+      const updated =
+        vessels.value
+          .find(
+            (vessel) =>
+              String(
+                vessel.mmsi,
+              ) ===
+              String(
+                selectedVessel
+                  .value
+                  .mmsi,
+              ),
+          );
 
-      if (updatedVessel) {
+      if (updated) {
         selectedVessel.value =
-          updatedVessel;
+          updated;
       }
     }
   } catch (error) {
     errorMessage.value =
       error.message;
   } finally {
-    isLoading.value = false;
+    isLoading.value =
+      false;
   }
 }
 
 
+/* =========================================================
+   TRAFFIC
+   ========================================================= */
+
 async function loadTraffic() {
   try {
-    trafficError.value = "";
+    trafficError.value =
+      "";
 
     traffic.value =
       await getCurrentTraffic();
@@ -139,65 +370,78 @@ async function loadTraffic() {
     trafficError.value =
       error.message;
   } finally {
-    trafficLoading.value = false;
+    trafficLoading.value =
+      false;
   }
 }
 
 
-async function loadPredictionStatus() {
+/* =========================================================
+   PREDICTION
+   ========================================================= */
+
+async function loadPrediction() {
+  predictionLoading.value =
+    true;
+
+  predictionError.value =
+    "";
+
   try {
     predictionStatus.value =
       await getPredictionStatus();
-  } catch {
-    predictionStatus.value = null;
+
+    if (
+      predictionStatus
+        .value
+        ?.ready_for_prediction
+    ) {
+      prediction.value =
+        await getLivePrediction();
+    } else {
+      prediction.value =
+        null;
+    }
+  } catch (error) {
+    predictionError.value =
+      error.message;
+
+    prediction.value =
+      null;
   } finally {
-    predictionLoading.value = false;
+    predictionLoading.value =
+      false;
   }
 }
 
 
-async function refreshDashboard() {
-  await Promise.allSettled([
-    loadVessels(),
-    loadTraffic(),
-    loadPredictionStatus(),
-  ]);
+/* =========================================================
+   VESSEL HISTORY
+   ========================================================= */
 
-  lastUpdated.value = new Date();
-}
-
-
-async function selectVessel(vessel) {
-  selectedVessel.value = vessel;
-
-  await loadVesselHistory(vessel);
-
-  await nextTick();
-
+async function loadVesselHistory(
+  vessel,
+) {
   if (
-    window.matchMedia(
-      "(max-width: 760px)",
-    ).matches
+    !vessel?.mmsi
   ) {
-    vesselDetailsElement.value
-      ?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-  }
-}
+    vesselHistory.value =
+      [];
 
+    historyError.value =
+      "";
 
-async function loadVesselHistory(vessel) {
-  if (!vessel?.mmsi) {
-    vesselHistory.value = [];
-    historyError.value = "";
     return;
   }
 
-  historyLoading.value = true;
-  historyError.value = "";
-  vesselHistory.value = [];
+  historyLoading.value =
+    true;
+
+  historyError.value =
+    "";
+
+  vesselHistory.value =
+    [];
 
   try {
     const data =
@@ -206,36 +450,176 @@ async function loadVesselHistory(vessel) {
       );
 
     vesselHistory.value =
-      data.positions ?? [];
+      data.positions ??
+      [];
   } catch (error) {
     historyError.value =
       error.message;
   } finally {
-    historyLoading.value = false;
+    historyLoading.value =
+      false;
   }
 }
 
 
-function closeVesselDetails() {
-  selectedVessel.value = null;
-  vesselHistory.value = [];
-  historyError.value = "";
+/* =========================================================
+   SELECT VESSEL
+   ========================================================= */
+
+async function selectVessel(
+  vessel,
+  updateRoute = true,
+) {
+  selectedVessel.value =
+    vessel;
+
+  if (
+    updateRoute
+  ) {
+    await router.replace({
+      name:
+        "dashboard",
+
+      query: {
+        vessel:
+          String(
+            vessel.mmsi,
+          ),
+      },
+    });
+  }
+
+  await loadVesselHistory(
+    vessel,
+  );
+
+  await nextTick();
+
+  if (
+    window.matchMedia(
+      "(max-width: 760px)",
+    ).matches
+  ) {
+    vesselDetailsElement
+      .value
+      ?.scrollIntoView({
+        behavior:
+          "smooth",
+
+        block:
+          "start",
+      });
+  }
+}
+
+
+async function selectVesselFromRoute() {
+  const requestedMmsi =
+    route.query.vessel;
+
+  if (
+    !requestedMmsi
+  ) {
+    return;
+  }
+
+  const vessel =
+    vessels.value
+      .find(
+        (item) =>
+          String(
+            item.mmsi,
+          ) ===
+          String(
+            requestedMmsi,
+          ),
+      );
+
+  if (!vessel) {
+    return;
+  }
+
+  if (
+    selectedVessel
+      .value
+      ?.mmsi ===
+    vessel.mmsi
+  ) {
+    return;
+  }
+
+  await selectVessel(
+    vessel,
+    false,
+  );
+}
+
+
+async function closeVesselDetails() {
+  selectedVessel.value =
+    null;
+
+  vesselHistory.value =
+    [];
+
+  historyError.value =
+    "";
+
+  await router.replace({
+    name:
+      "dashboard",
+  });
+}
+
+
+/* =========================================================
+   REFRESH
+   ========================================================= */
+
+async function refreshDashboard() {
+  await Promise.allSettled(
+    [
+      loadVessels(),
+      loadTraffic(),
+      loadPrediction(),
+    ],
+  );
+
+  await selectVesselFromRoute();
+
+  lastUpdated.value =
+    new Date();
 }
 
 
 onMounted(async () => {
   await refreshDashboard();
 
-  refreshTimer = setInterval(
-    refreshDashboard,
-    15000,
-  );
+  refreshTimer =
+    setInterval(
+      refreshDashboard,
+      15000,
+    );
 });
 
 
+watch(
+  () =>
+    route.query.vessel,
+
+  async () => {
+    await selectVesselFromRoute();
+  },
+);
+
+
 onUnmounted(() => {
-  if (refreshTimer) {
-    clearInterval(refreshTimer);
+  if (
+    refreshTimer
+  ) {
+    clearInterval(
+      refreshTimer,
+    );
   }
 });
 </script>
@@ -246,10 +630,6 @@ onUnmounted(() => {
     <AppHeader />
 
     <div class="dashboard-page">
-      <!-- =====================================================
-           PAGE INTRO
-           ===================================================== -->
-
       <section class="dashboard-intro">
         <div>
           <p class="eyebrow">
@@ -261,29 +641,33 @@ onUnmounted(() => {
           </h1>
 
           <p class="dashboard-description">
-            Real-time vessel monitoring and maritime
-            traffic intelligence powered by
-            BarentsWatch AIS.
+            Real-time vessel monitoring and
+            maritime traffic intelligence
+            powered by BarentsWatch AIS.
           </p>
         </div>
 
         <div class="dashboard-refresh-status">
-          <span class="dashboard-refresh-dot"></span>
+          <span
+            class="dashboard-refresh-dot"
+          ></span>
 
           <div>
-            <strong>Live system</strong>
+            <strong>
+              Live system
+            </strong>
 
             <span>
               Updated
-              {{ formatTimestamp(lastUpdated) }}
+              {{
+                formatTimestamp(
+                  lastUpdated,
+                )
+              }}
             </span>
           </div>
         </div>
       </section>
-
-      <!-- =====================================================
-           METRICS
-           ===================================================== -->
 
       <section class="dashboard-metrics">
         <MetricCard
@@ -296,21 +680,21 @@ onUnmounted(() => {
         <MetricCard
           label="ARRIVALS THIS HOUR"
           :value="arrivals"
-          helper="Ålesund geofence entries"
+          helper="Study-area geofence entries"
           variant="arrivals"
         />
 
         <MetricCard
           label="DEPARTURES THIS HOUR"
           :value="departures"
-          helper="Ålesund geofence exits"
+          helper="Study-area geofence exits"
           variant="departures"
         />
 
         <MetricCard
           label="TRAFFIC EVENTS"
           :value="trafficEvents"
-          helper="Combined hourly activity"
+          helper="Combined hourly geofence activity"
           variant="traffic"
         />
       </section>
@@ -322,13 +706,14 @@ onUnmounted(() => {
         {{ trafficError }}
       </p>
 
-      <!-- =====================================================
-           MAIN WORKSPACE
-           ===================================================== -->
-
       <section class="dashboard-workspace">
         <div class="dashboard-map-column">
-          <div class="dashboard-panel map-card">
+          <div
+            class="
+              dashboard-panel
+              map-card
+            "
+          >
             <div class="dashboard-panel-header">
               <div>
                 <p class="dashboard-panel-label">
@@ -340,8 +725,8 @@ onUnmounted(() => {
                 </h2>
 
                 <p>
-                  BarentsWatch AIS · refreshed every
-                  15 seconds
+                  BarentsWatch AIS · refreshed
+                  every 15 seconds
                 </p>
               </div>
 
@@ -379,92 +764,141 @@ onUnmounted(() => {
                 :vessels="vessels"
                 :selected-vessel="selectedVessel"
                 :vessel-history="vesselHistory"
-                @vessel-selected="selectVessel"
+                @vessel-selected="
+                  selectVessel
+                "
               />
             </div>
           </div>
         </div>
 
-        <!-- ===================================================
-             RIGHT COLUMN
-             =================================================== -->
-
         <aside class="dashboard-side-column">
           <TrafficStatusCard
-            :prediction-status="predictionStatus"
-            :loading="predictionLoading"
+            :prediction-status="
+              predictionStatus
+            "
+            :prediction="
+              prediction
+            "
+            :loading="
+              predictionLoading
+            "
+            :error="
+              predictionError
+            "
           />
 
-          <article class="dashboard-panel traffic-detail-card">
-            <div class="dashboard-panel-header compact">
+          <article
+            class="
+              dashboard-panel
+              traffic-detail-card
+            "
+          >
+            <div
+              class="
+                dashboard-panel-header
+                compact
+              "
+            >
               <div>
                 <p class="dashboard-panel-label">
-                  CURRENT HOUR
+                  LIVE AIS
                 </p>
 
                 <h2>
-                  Traffic composition
+                  Active vessel composition
                 </h2>
               </div>
             </div>
 
             <div class="traffic-composition-list">
               <div>
-                <span>Passenger</span>
+                <span>
+                  Passenger
+                </span>
 
                 <strong>
                   {{
-                    traffic?.passenger_events ?? 0
+                    vesselComposition
+                      .passenger
                   }}
                 </strong>
               </div>
 
               <div>
-                <span>Cargo</span>
+                <span>
+                  Cargo
+                </span>
 
                 <strong>
                   {{
-                    traffic?.cargo_events ?? 0
+                    vesselComposition
+                      .cargo
                   }}
                 </strong>
               </div>
 
               <div>
-                <span>Fishing</span>
+                <span>
+                  Fishing
+                </span>
 
                 <strong>
                   {{
-                    traffic?.fishing_events ?? 0
+                    vesselComposition
+                      .fishing
                   }}
                 </strong>
               </div>
 
               <div>
-                <span>Tanker</span>
+                <span>
+                  Tanker
+                </span>
 
                 <strong>
                   {{
-                    traffic?.tanker_events ?? 0
+                    vesselComposition
+                      .tanker
                   }}
                 </strong>
               </div>
 
               <div>
-                <span>Auxiliary</span>
+                <span>
+                  Auxiliary
+                </span>
 
                 <strong>
                   {{
-                    traffic?.auxiliary_events ?? 0
+                    vesselComposition
+                      .auxiliary
                   }}
                 </strong>
               </div>
 
               <div>
-                <span>Tug</span>
+                <span>
+                  Tug
+                </span>
 
                 <strong>
                   {{
-                    traffic?.tug_events ?? 0
+                    vesselComposition
+                      .tug
+                  }}
+                </strong>
+              </div>
+
+              <div>
+                <span>
+                  Other / unknown
+                </span>
+
+                <strong>
+                  {{
+                    vesselComposition
+                      .other
                   }}
                 </strong>
               </div>
@@ -477,7 +911,13 @@ onUnmounted(() => {
 
               <strong>
                 {{ averageSpeed }}
-                <small v-if="averageSpeed !== '—'">
+
+                <small
+                  v-if="
+                    averageSpeed !==
+                    '—'
+                  "
+                >
                   kn
                 </small>
               </strong>
@@ -485,10 +925,6 @@ onUnmounted(() => {
           </article>
         </aside>
       </section>
-
-      <!-- =====================================================
-           SELECTED VESSEL
-           ===================================================== -->
 
       <section
         v-if="selectedVessel"
@@ -509,18 +945,27 @@ onUnmounted(() => {
           <button
             class="secondary-button"
             type="button"
-            @click="closeVesselDetails"
+            @click="
+              closeVesselDetails
+            "
           >
             Close details
           </button>
         </div>
 
         <VesselDetails
-          :vessel="selectedVessel"
-          :history="vesselHistory"
-          :history-loading="historyLoading"
-          :history-error="historyError"
-          @close="closeVesselDetails"
+          :vessel="
+            selectedVessel
+          "
+          :history="
+            vesselHistory
+          "
+          :history-loading="
+            historyLoading
+          "
+          :history-error="
+            historyError
+          "
         />
       </section>
     </div>

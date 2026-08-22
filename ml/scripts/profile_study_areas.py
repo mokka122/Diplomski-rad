@@ -8,6 +8,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 RAW_DIR = BASE_DIR / "data" / "raw"
 
 FILES = {
+    2020: RAW_DIR / "voyages_2020.csv",
+    2021: RAW_DIR / "voyages_2021.csv",
+    2022: RAW_DIR / "voyages_2022.csv",
     2023: RAW_DIR / "voyages_2023.csv",
     2024: RAW_DIR / "voyages_2024.csv",
     2025: RAW_DIR / "voyages_2025.csv",
@@ -401,7 +404,7 @@ def print_combined(results: list[dict]) -> None:
 
     print()
     print("=" * 100)
-    print("COMBINED MUNICIPALITY RANKING 2023-2025")
+    print("COMBINED MUNICIPALITY RANKING 2020-2025")
     print("=" * 100)
 
     print(

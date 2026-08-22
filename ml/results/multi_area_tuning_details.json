@@ -1,0 +1,1214 @@
+{
+  "XGB_01": {
+    "model_family": "XGBoost",
+    "parameters": {
+      "n_estimators": 300,
+      "learning_rate": 0.03,
+      "max_depth": 5,
+      "min_child_weight": 1,
+      "subsample": 0.9,
+      "colsample_bytree": 0.9
+    },
+    "validation_metrics": {
+      "accuracy": 0.6016483516483516,
+      "macro_precision": 0.6016355198972635,
+      "macro_recall": 0.6058381463299444,
+      "macro_f1": 0.5881699362749372,
+      "weighted_f1": 0.5965020730619839
+    },
+    "mean_area_macro_f1": 0.5049347479598945,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5108363858363858,
+        "macro_precision": 0.4728598672925883,
+        "macro_recall": 0.49455523486784125,
+        "macro_f1": 0.46451008966531404,
+        "weighted_f1": 0.47519878753180306
+      },
+      "Kristiansund": {
+        "accuracy": 0.4226190476190476,
+        "macro_precision": 0.41211562784644684,
+        "macro_recall": 0.3620656511991231,
+        "macro_f1": 0.2910258444899895,
+        "weighted_f1": 0.3263019044687504
+      },
+      "Stavanger": {
+        "accuracy": 0.563034188034188,
+        "macro_precision": 0.4933878871353941,
+        "macro_recall": 0.5070043293866897,
+        "macro_f1": 0.47943576060596715,
+        "weighted_f1": 0.5328123149410243
+      },
+      "Tromsø": {
+        "accuracy": 0.7016178266178266,
+        "macro_precision": 0.6360005443868744,
+        "macro_recall": 0.641715072031328,
+        "macro_f1": 0.6373318176550234,
+        "weighted_f1": 0.6964277348869838
+      },
+      "Ålesund": {
+        "accuracy": 0.8101343101343101,
+        "macro_precision": 0.7357563030372919,
+        "macro_recall": 0.6423126320064375,
+        "macro_f1": 0.6523702273831778,
+        "weighted_f1": 0.7926361465617804
+      }
+    }
+  },
+  "XGB_02": {
+    "model_family": "XGBoost",
+    "parameters": {
+      "n_estimators": 400,
+      "learning_rate": 0.03,
+      "max_depth": 7,
+      "min_child_weight": 1,
+      "subsample": 0.9,
+      "colsample_bytree": 0.9
+    },
+    "validation_metrics": {
+      "accuracy": 0.6216727716727717,
+      "macro_precision": 0.6234114163768419,
+      "macro_recall": 0.6264451165631307,
+      "macro_f1": 0.6101774023746565,
+      "weighted_f1": 0.6188791438761951
+    },
+    "mean_area_macro_f1": 0.5393314782749589,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.510989010989011,
+        "macro_precision": 0.46726611821087327,
+        "macro_recall": 0.4936413894402029,
+        "macro_f1": 0.45741250987258314,
+        "weighted_f1": 0.46876709324388854
+      },
+      "Kristiansund": {
+        "accuracy": 0.447954822954823,
+        "macro_precision": 0.44392048772897325,
+        "macro_recall": 0.3934047335349223,
+        "macro_f1": 0.3429119319316494,
+        "weighted_f1": 0.37125689003049145
+      },
+      "Stavanger": {
+        "accuracy": 0.5676129426129426,
+        "macro_precision": 0.5009551874177329,
+        "macro_recall": 0.5146592953490502,
+        "macro_f1": 0.4925195219693026,
+        "weighted_f1": 0.544111638248681
+      },
+      "Tromsø": {
+        "accuracy": 0.7367216117216118,
+        "macro_precision": 0.672477454503145,
+        "macro_recall": 0.6903230588423104,
+        "macro_f1": 0.6797411186393253,
+        "weighted_f1": 0.7387038323561911
+      },
+      "Ålesund": {
+        "accuracy": 0.8450854700854701,
+        "macro_precision": 0.774917303151641,
+        "macro_recall": 0.7045413219826507,
+        "macro_f1": 0.724072308961934,
+        "weighted_f1": 0.8357663706139438
+      }
+    }
+  },
+  "XGB_03": {
+    "model_family": "XGBoost",
+    "parameters": {
+      "n_estimators": 500,
+      "learning_rate": 0.03,
+      "max_depth": 7,
+      "min_child_weight": 3,
+      "subsample": 0.9,
+      "colsample_bytree": 0.9
+    },
+    "validation_metrics": {
+      "accuracy": 0.6212759462759463,
+      "macro_precision": 0.6232638279011596,
+      "macro_recall": 0.6263922520321238,
+      "macro_f1": 0.6097436359695778,
+      "weighted_f1": 0.6183538329683661
+    },
+    "mean_area_macro_f1": 0.5406287498891578,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5102258852258852,
+        "macro_precision": 0.4675289069301301,
+        "macro_recall": 0.4931284949688199,
+        "macro_f1": 0.4586862713550368,
+        "weighted_f1": 0.46987073869063634
+      },
+      "Kristiansund": {
+        "accuracy": 0.45024420024420025,
+        "macro_precision": 0.44723693115310437,
+        "macro_recall": 0.3971397604485288,
+        "macro_f1": 0.34856009953058326,
+        "weighted_f1": 0.37519292488249023
+      },
+      "Stavanger": {
+        "accuracy": 0.561965811965812,
+        "macro_precision": 0.4912296204938748,
+        "macro_recall": 0.5095078436006745,
+        "macro_f1": 0.4851281427540952,
+        "weighted_f1": 0.5374707138827919
+      },
+      "Tromsø": {
+        "accuracy": 0.7377899877899878,
+        "macro_precision": 0.6732592987599658,
+        "macro_recall": 0.6936870667271577,
+        "macro_f1": 0.6812594483101814,
+        "weighted_f1": 0.7399280763314946
+      },
+      "Ålesund": {
+        "accuracy": 0.8461538461538461,
+        "macro_precision": 0.7728445063328323,
+        "macro_recall": 0.7107231663973881,
+        "macro_f1": 0.7295097874958923,
+        "weighted_f1": 0.8379546184302628
+      }
+    }
+  },
+  "XGB_04": {
+    "model_family": "XGBoost",
+    "parameters": {
+      "n_estimators": 350,
+      "learning_rate": 0.05,
+      "max_depth": 5,
+      "min_child_weight": 3,
+      "subsample": 0.9,
+      "colsample_bytree": 0.9
+    },
+    "validation_metrics": {
+      "accuracy": 0.6107448107448108,
+      "macro_precision": 0.6122054989354417,
+      "macro_recall": 0.6151079966125,
+      "macro_f1": 0.5971209985749407,
+      "weighted_f1": 0.6057963665037195
+    },
+    "mean_area_macro_f1": 0.5225632190526979,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.509004884004884,
+        "macro_precision": 0.46775522312684154,
+        "macro_recall": 0.4921300005444384,
+        "macro_f1": 0.45979252345484484,
+        "weighted_f1": 0.47083906611545523
+      },
+      "Kristiansund": {
+        "accuracy": 0.43421855921855923,
+        "macro_precision": 0.42889935456147743,
+        "macro_recall": 0.3804358275827637,
+        "macro_f1": 0.32165161949122245,
+        "weighted_f1": 0.34766963581065735
+      },
+      "Stavanger": {
+        "accuracy": 0.5634920634920635,
+        "macro_precision": 0.49200445129670617,
+        "macro_recall": 0.5088128239860331,
+        "macro_f1": 0.4820429188768289,
+        "weighted_f1": 0.5352315921216043
+      },
+      "Tromsø": {
+        "accuracy": 0.7187118437118437,
+        "macro_precision": 0.6519396347804,
+        "macro_recall": 0.6631491176156886,
+        "macro_f1": 0.6559412670829251,
+        "weighted_f1": 0.7161095380112783
+      },
+      "Ålesund": {
+        "accuracy": 0.8282967032967034,
+        "macro_precision": 0.7591985529790467,
+        "macro_recall": 0.6762607727409221,
+        "macro_f1": 0.6933877663576685,
+        "weighted_f1": 0.8156941363655604
+      }
+    }
+  },
+  "XGB_05": {
+    "model_family": "XGBoost",
+    "parameters": {
+      "n_estimators": 450,
+      "learning_rate": 0.05,
+      "max_depth": 7,
+      "min_child_weight": 3,
+      "subsample": 0.9,
+      "colsample_bytree": 0.9
+    },
+    "validation_metrics": {
+      "accuracy": 0.6221611721611722,
+      "macro_precision": 0.6230919031542014,
+      "macro_recall": 0.6265344417146941,
+      "macro_f1": 0.6107879172723866,
+      "weighted_f1": 0.6196639420819116
+    },
+    "mean_area_macro_f1": 0.5461040721613712,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.51007326007326,
+        "macro_precision": 0.4720298273349979,
+        "macro_recall": 0.49352353523612935,
+        "macro_f1": 0.4626409903231341,
+        "weighted_f1": 0.4733193896723134
+      },
+      "Kristiansund": {
+        "accuracy": 0.4571123321123321,
+        "macro_precision": 0.4597118620273248,
+        "macro_recall": 0.4072074105219417,
+        "macro_f1": 0.3640012363126732,
+        "weighted_f1": 0.3873523519866087
+      },
+      "Stavanger": {
+        "accuracy": 0.5648656898656899,
+        "macro_precision": 0.5006518334602167,
+        "macro_recall": 0.5153321011748887,
+        "macro_f1": 0.49619467758467994,
+        "weighted_f1": 0.5457926538489741
+      },
+      "Tromsø": {
+        "accuracy": 0.7353479853479854,
+        "macro_precision": 0.6693786546345838,
+        "macro_recall": 0.6874074482967288,
+        "macro_f1": 0.6766942327292891,
+        "weighted_f1": 0.7383319239890859
+      },
+      "Ålesund": {
+        "accuracy": 0.8434065934065934,
+        "macro_precision": 0.7628982250371924,
+        "macro_recall": 0.7152878086901455,
+        "macro_f1": 0.73098922385708,
+        "weighted_f1": 0.8364449079445255
+      }
+    }
+  },
+  "XGB_06": {
+    "model_family": "XGBoost",
+    "parameters": {
+      "n_estimators": 350,
+      "learning_rate": 0.05,
+      "max_depth": 9,
+      "min_child_weight": 3,
+      "subsample": 0.9,
+      "colsample_bytree": 0.9
+    },
+    "validation_metrics": {
+      "accuracy": 0.6233821733821734,
+      "macro_precision": 0.6234675055787586,
+      "macro_recall": 0.627741872172739,
+      "macro_f1": 0.6119079581405314,
+      "weighted_f1": 0.6206085963261757
+    },
+    "mean_area_macro_f1": 0.5490698966840826,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5115995115995116,
+        "macro_precision": 0.47650912054210876,
+        "macro_recall": 0.49500643340764466,
+        "macro_f1": 0.46571745969200423,
+        "weighted_f1": 0.4762344594764656
+      },
+      "Kristiansund": {
+        "accuracy": 0.4624542124542125,
+        "macro_precision": 0.4605410039392304,
+        "macro_recall": 0.41352907435194425,
+        "macro_f1": 0.3722345548241239,
+        "weighted_f1": 0.3949196534199285
+      },
+      "Stavanger": {
+        "accuracy": 0.5663919413919414,
+        "macro_precision": 0.49630347928974855,
+        "macro_recall": 0.5133300408002818,
+        "macro_f1": 0.49315974322686973,
+        "weighted_f1": 0.545026757667003
+      },
+      "Tromsø": {
+        "accuracy": 0.7358058608058609,
+        "macro_precision": 0.6715574142185442,
+        "macro_recall": 0.6894655808529407,
+        "macro_f1": 0.6789029055721079,
+        "weighted_f1": 0.7402992204962395
+      },
+      "Ålesund": {
+        "accuracy": 0.8406593406593407,
+        "macro_precision": 0.7578307669033476,
+        "macro_recall": 0.7229737096451393,
+        "macro_f1": 0.7353348201053073,
+        "weighted_f1": 0.8350661042635381
+      }
+    }
+  },
+  "XGB_07": {
+    "model_family": "XGBoost",
+    "parameters": {
+      "n_estimators": 300,
+      "learning_rate": 0.07,
+      "max_depth": 6,
+      "min_child_weight": 3,
+      "subsample": 0.85,
+      "colsample_bytree": 0.9
+    },
+    "validation_metrics": {
+      "accuracy": 0.6191391941391942,
+      "macro_precision": 0.6206808732066339,
+      "macro_recall": 0.6240373536446383,
+      "macro_f1": 0.6071130598326466,
+      "weighted_f1": 0.6157525893685021
+    },
+    "mean_area_macro_f1": 0.5402646712439684,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5132783882783882,
+        "macro_precision": 0.47293162051573123,
+        "macro_recall": 0.4962934005249598,
+        "macro_f1": 0.46378146928109665,
+        "weighted_f1": 0.4747750700321204
+      },
+      "Kristiansund": {
+        "accuracy": 0.44841269841269843,
+        "macro_precision": 0.45207372841102234,
+        "macro_recall": 0.39720272901864856,
+        "macro_f1": 0.34956379274529,
+        "weighted_f1": 0.37371572835375694
+      },
+      "Stavanger": {
+        "accuracy": 0.5625763125763126,
+        "macro_precision": 0.4944095276678622,
+        "macro_recall": 0.511464234377105,
+        "macro_f1": 0.4883910012804063,
+        "weighted_f1": 0.5394489757083842
+      },
+      "Tromsø": {
+        "accuracy": 0.7297008547008547,
+        "macro_precision": 0.6640049657683974,
+        "macro_recall": 0.6809418365027314,
+        "macro_f1": 0.6707840701074127,
+        "weighted_f1": 0.7306997977132773
+      },
+      "Ålesund": {
+        "accuracy": 0.8417277167277167,
+        "macro_precision": 0.7685709950305375,
+        "macro_recall": 0.7110175180223934,
+        "macro_f1": 0.7288030228056367,
+        "weighted_f1": 0.8339668027394728
+      }
+    }
+  },
+  "XGB_08": {
+    "model_family": "XGBoost",
+    "parameters": {
+      "n_estimators": 400,
+      "learning_rate": 0.04,
+      "max_depth": 8,
+      "min_child_weight": 5,
+      "subsample": 0.9,
+      "colsample_bytree": 0.85
+    },
+    "validation_metrics": {
+      "accuracy": 0.6239316239316239,
+      "macro_precision": 0.6250437817091336,
+      "macro_recall": 0.6286932579185546,
+      "macro_f1": 0.612423525214966,
+      "weighted_f1": 0.6210822835673904
+    },
+    "mean_area_macro_f1": 0.5466442085675395,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5125152625152625,
+        "macro_precision": 0.47452071399040646,
+        "macro_recall": 0.4957866756467347,
+        "macro_f1": 0.464398787842589,
+        "weighted_f1": 0.4751484222997951
+      },
+      "Kristiansund": {
+        "accuracy": 0.4597069597069597,
+        "macro_precision": 0.4590575172140335,
+        "macro_recall": 0.4081559914510511,
+        "macro_f1": 0.36186038190339415,
+        "weighted_f1": 0.3864897010295181
+      },
+      "Stavanger": {
+        "accuracy": 0.5628815628815629,
+        "macro_precision": 0.4923274793497366,
+        "macro_recall": 0.5097501748430635,
+        "macro_f1": 0.48935677317133547,
+        "weighted_f1": 0.5409906971299727
+      },
+      "Tromsø": {
+        "accuracy": 0.7394688644688645,
+        "macro_precision": 0.6743870262218209,
+        "macro_recall": 0.6953835079707432,
+        "macro_f1": 0.6826469202642126,
+        "weighted_f1": 0.743167847872968
+      },
+      "Ålesund": {
+        "accuracy": 0.8450854700854701,
+        "macro_precision": 0.7651339813512822,
+        "macro_recall": 0.7194602553688685,
+        "macro_f1": 0.7349581796561662,
+        "weighted_f1": 0.8385554248473711
+      }
+    }
+  },
+  "HGB_01": {
+    "model_family": "HistGradientBoosting",
+    "parameters": {
+      "learning_rate": 0.05,
+      "max_iter": 250,
+      "max_leaf_nodes": 31,
+      "min_samples_leaf": 20,
+      "l2_regularization": 1.0
+    },
+    "validation_metrics": {
+      "accuracy": 0.6163308913308914,
+      "macro_precision": 0.6175689964878758,
+      "macro_recall": 0.6213312859103765,
+      "macro_f1": 0.6039108975219584,
+      "weighted_f1": 0.612311392435176
+    },
+    "mean_area_macro_f1": 0.5320324308606611,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5102258852258852,
+        "macro_precision": 0.4670040347439122,
+        "macro_recall": 0.49301628351493615,
+        "macro_f1": 0.4572678767310651,
+        "weighted_f1": 0.4685889859942538
+      },
+      "Kristiansund": {
+        "accuracy": 0.44505494505494503,
+        "macro_precision": 0.4417846768336964,
+        "macro_recall": 0.3898090322788645,
+        "macro_f1": 0.33547045612389104,
+        "weighted_f1": 0.36383720080868914
+      },
+      "Stavanger": {
+        "accuracy": 0.5575396825396826,
+        "macro_precision": 0.4871401100807722,
+        "macro_recall": 0.5054052367948586,
+        "macro_f1": 0.4809482040342166,
+        "weighted_f1": 0.5325338230910412
+      },
+      "Tromsø": {
+        "accuracy": 0.7307692307692307,
+        "macro_precision": 0.6631534172363318,
+        "macro_recall": 0.6788364815055173,
+        "macro_f1": 0.6691456430238243,
+        "weighted_f1": 0.7304965665255023
+      },
+      "Ålesund": {
+        "accuracy": 0.8380647130647131,
+        "macro_precision": 0.7688848755258121,
+        "macro_recall": 0.6985636900849578,
+        "macro_f1": 0.7173299743903082,
+        "weighted_f1": 0.828404547355125
+      }
+    }
+  },
+  "HGB_02": {
+    "model_family": "HistGradientBoosting",
+    "parameters": {
+      "learning_rate": 0.05,
+      "max_iter": 350,
+      "max_leaf_nodes": 31,
+      "min_samples_leaf": 20,
+      "l2_regularization": 1.0
+    },
+    "validation_metrics": {
+      "accuracy": 0.6163308913308914,
+      "macro_precision": 0.6175689964878758,
+      "macro_recall": 0.6213312859103765,
+      "macro_f1": 0.6039108975219584,
+      "weighted_f1": 0.612311392435176
+    },
+    "mean_area_macro_f1": 0.5320324308606611,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5102258852258852,
+        "macro_precision": 0.4670040347439122,
+        "macro_recall": 0.49301628351493615,
+        "macro_f1": 0.4572678767310651,
+        "weighted_f1": 0.4685889859942538
+      },
+      "Kristiansund": {
+        "accuracy": 0.44505494505494503,
+        "macro_precision": 0.4417846768336964,
+        "macro_recall": 0.3898090322788645,
+        "macro_f1": 0.33547045612389104,
+        "weighted_f1": 0.36383720080868914
+      },
+      "Stavanger": {
+        "accuracy": 0.5575396825396826,
+        "macro_precision": 0.4871401100807722,
+        "macro_recall": 0.5054052367948586,
+        "macro_f1": 0.4809482040342166,
+        "weighted_f1": 0.5325338230910412
+      },
+      "Tromsø": {
+        "accuracy": 0.7307692307692307,
+        "macro_precision": 0.6631534172363318,
+        "macro_recall": 0.6788364815055173,
+        "macro_f1": 0.6691456430238243,
+        "weighted_f1": 0.7304965665255023
+      },
+      "Ålesund": {
+        "accuracy": 0.8380647130647131,
+        "macro_precision": 0.7688848755258121,
+        "macro_recall": 0.6985636900849578,
+        "macro_f1": 0.7173299743903082,
+        "weighted_f1": 0.828404547355125
+      }
+    }
+  },
+  "HGB_03": {
+    "model_family": "HistGradientBoosting",
+    "parameters": {
+      "learning_rate": 0.05,
+      "max_iter": 350,
+      "max_leaf_nodes": 63,
+      "min_samples_leaf": 20,
+      "l2_regularization": 1.0
+    },
+    "validation_metrics": {
+      "accuracy": 0.6232295482295482,
+      "macro_precision": 0.6254372813953695,
+      "macro_recall": 0.6282641777962473,
+      "macro_f1": 0.6105866514514561,
+      "weighted_f1": 0.6190992173965627
+    },
+    "mean_area_macro_f1": 0.5408737270236372,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5149572649572649,
+        "macro_precision": 0.47236473955011166,
+        "macro_recall": 0.49723244100433645,
+        "macro_f1": 0.4584579137350813,
+        "weighted_f1": 0.46992212704474245
+      },
+      "Kristiansund": {
+        "accuracy": 0.46047008547008544,
+        "macro_precision": 0.4659584938173224,
+        "macro_recall": 0.4091926612118533,
+        "macro_f1": 0.3657448704567223,
+        "weighted_f1": 0.3902300748182406
+      },
+      "Stavanger": {
+        "accuracy": 0.5660866910866911,
+        "macro_precision": 0.4963556617630247,
+        "macro_recall": 0.5138457874925217,
+        "macro_f1": 0.4849381790840212,
+        "weighted_f1": 0.5378116722266816
+      },
+      "Tromsø": {
+        "accuracy": 0.7380952380952381,
+        "macro_precision": 0.6727092989650835,
+        "macro_recall": 0.6880705370658644,
+        "macro_f1": 0.6790275924335695,
+        "weighted_f1": 0.7391176632185256
+      },
+      "Ålesund": {
+        "accuracy": 0.8365384615384616,
+        "macro_precision": 0.7625293434510333,
+        "macro_recall": 0.6987181609495697,
+        "macro_f1": 0.7162000794087918,
+        "weighted_f1": 0.8271933469169793
+      }
+    }
+  },
+  "HGB_04": {
+    "model_family": "HistGradientBoosting",
+    "parameters": {
+      "learning_rate": 0.08,
+      "max_iter": 250,
+      "max_leaf_nodes": 31,
+      "min_samples_leaf": 20,
+      "l2_regularization": 1.0
+    },
+    "validation_metrics": {
+      "accuracy": 0.6176129426129426,
+      "macro_precision": 0.6193015625115265,
+      "macro_recall": 0.6229398696276838,
+      "macro_f1": 0.6050159047537781,
+      "weighted_f1": 0.6133183273675676
+    },
+    "mean_area_macro_f1": 0.533874214439181,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5085470085470085,
+        "macro_precision": 0.46279232057964254,
+        "macro_recall": 0.491030845846673,
+        "macro_f1": 0.4538726888265859,
+        "weighted_f1": 0.4654187038980443
+      },
+      "Kristiansund": {
+        "accuracy": 0.44871794871794873,
+        "macro_precision": 0.4468226718822755,
+        "macro_recall": 0.3937320245721832,
+        "macro_f1": 0.34254411515052735,
+        "weighted_f1": 0.3711632645557598
+      },
+      "Stavanger": {
+        "accuracy": 0.5636446886446886,
+        "macro_precision": 0.4891256885005732,
+        "macro_recall": 0.51024648808525,
+        "macro_f1": 0.4815212216464924,
+        "weighted_f1": 0.5350037124247465
+      },
+      "Tromsø": {
+        "accuracy": 0.7307692307692307,
+        "macro_precision": 0.6636224512581378,
+        "macro_recall": 0.6780344560514044,
+        "macro_f1": 0.6692890588546859,
+        "weighted_f1": 0.7304610809689622
+      },
+      "Ålesund": {
+        "accuracy": 0.8363858363858364,
+        "macro_precision": 0.7602997834871686,
+        "macro_recall": 0.7056483241887958,
+        "macro_f1": 0.7221439877176135,
+        "weighted_f1": 0.828370289768006
+      }
+    }
+  },
+  "HGB_05": {
+    "model_family": "HistGradientBoosting",
+    "parameters": {
+      "learning_rate": 0.08,
+      "max_iter": 300,
+      "max_leaf_nodes": 63,
+      "min_samples_leaf": 20,
+      "l2_regularization": 1.0
+    },
+    "validation_metrics": {
+      "accuracy": 0.6214285714285714,
+      "macro_precision": 0.6226301606721752,
+      "macro_recall": 0.6257950187528792,
+      "macro_f1": 0.6084508228845629,
+      "weighted_f1": 0.6171015569487455
+    },
+    "mean_area_macro_f1": 0.539649582411084,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5132783882783882,
+        "macro_precision": 0.47328945986089704,
+        "macro_recall": 0.49586620421898403,
+        "macro_f1": 0.46037228474288705,
+        "weighted_f1": 0.47154347904878946
+      },
+      "Kristiansund": {
+        "accuracy": 0.4589438339438339,
+        "macro_precision": 0.45758559828262674,
+        "macro_recall": 0.40955407281830974,
+        "macro_f1": 0.36778384760990407,
+        "weighted_f1": 0.3909013419780916
+      },
+      "Stavanger": {
+        "accuracy": 0.568986568986569,
+        "macro_precision": 0.5023765204750157,
+        "macro_recall": 0.5155500303065166,
+        "macro_f1": 0.4893248035597959,
+        "weighted_f1": 0.5417035966816865
+      },
+      "Tromsø": {
+        "accuracy": 0.7347374847374848,
+        "macro_precision": 0.6676942647792671,
+        "macro_recall": 0.6867863424021249,
+        "macro_f1": 0.6749473792340263,
+        "weighted_f1": 0.7357699047293829
+      },
+      "Ålesund": {
+        "accuracy": 0.8311965811965812,
+        "macro_precision": 0.7554731119860866,
+        "macro_recall": 0.6890486765818654,
+        "macro_f1": 0.7058195969088069,
+        "weighted_f1": 0.8208536902424514
+      }
+    }
+  },
+  "HGB_06": {
+    "model_family": "HistGradientBoosting",
+    "parameters": {
+      "learning_rate": 0.04,
+      "max_iter": 400,
+      "max_leaf_nodes": 63,
+      "min_samples_leaf": 30,
+      "l2_regularization": 2.0
+    },
+    "validation_metrics": {
+      "accuracy": 0.6209096459096459,
+      "macro_precision": 0.6225264262443265,
+      "macro_recall": 0.6254124495361385,
+      "macro_f1": 0.6073716981008908,
+      "weighted_f1": 0.6159790828176307
+    },
+    "mean_area_macro_f1": 0.5390128005097405,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5128205128205128,
+        "macro_precision": 0.4711418389024071,
+        "macro_recall": 0.4953439982950401,
+        "macro_f1": 0.45752665167541,
+        "weighted_f1": 0.46879757110739734
+      },
+      "Kristiansund": {
+        "accuracy": 0.4574175824175824,
+        "macro_precision": 0.457400072863732,
+        "macro_recall": 0.40805812989727563,
+        "macro_f1": 0.36523903105929056,
+        "weighted_f1": 0.38806404108475734
+      },
+      "Stavanger": {
+        "accuracy": 0.5624236874236874,
+        "macro_precision": 0.48178558331733806,
+        "macro_recall": 0.5067739219177573,
+        "macro_f1": 0.4753150519872489,
+        "weighted_f1": 0.5301925685920165
+      },
+      "Tromsø": {
+        "accuracy": 0.7341269841269841,
+        "macro_precision": 0.6665914004753473,
+        "macro_recall": 0.6836378403943867,
+        "macro_f1": 0.6731787217745517,
+        "weighted_f1": 0.7346458417045729
+      },
+      "Ålesund": {
+        "accuracy": 0.8377594627594628,
+        "macro_precision": 0.7643408486653432,
+        "macro_recall": 0.7067685631731123,
+        "macro_f1": 0.7238045460522019,
+        "weighted_f1": 0.8295315789355842
+      }
+    }
+  },
+  "HGB_07": {
+    "model_family": "HistGradientBoosting",
+    "parameters": {
+      "learning_rate": 0.06,
+      "max_iter": 300,
+      "max_leaf_nodes": 47,
+      "min_samples_leaf": 30,
+      "l2_regularization": 5.0
+    },
+    "validation_metrics": {
+      "accuracy": 0.619932844932845,
+      "macro_precision": 0.6221568652228231,
+      "macro_recall": 0.6246920648829869,
+      "macro_f1": 0.6068278632919016,
+      "weighted_f1": 0.6153261826916895
+    },
+    "mean_area_macro_f1": 0.5366863909951836,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5119047619047619,
+        "macro_precision": 0.4691271748082764,
+        "macro_recall": 0.4943125609554942,
+        "macro_f1": 0.45633313710286066,
+        "weighted_f1": 0.4677786791906422
+      },
+      "Kristiansund": {
+        "accuracy": 0.45695970695970695,
+        "macro_precision": 0.4604655915643432,
+        "macro_recall": 0.4055656827673662,
+        "macro_f1": 0.35965382025499987,
+        "weighted_f1": 0.3840385421073689
+      },
+      "Stavanger": {
+        "accuracy": 0.5613553113553114,
+        "macro_precision": 0.48894578445308595,
+        "macro_recall": 0.5078004431709865,
+        "macro_f1": 0.4805395110645026,
+        "weighted_f1": 0.533339104735131
+      },
+      "Tromsø": {
+        "accuracy": 0.7307692307692307,
+        "macro_precision": 0.6632698650793327,
+        "macro_recall": 0.6805970215802435,
+        "macro_f1": 0.6696153039154248,
+        "weighted_f1": 0.730360522542576
+      },
+      "Ålesund": {
+        "accuracy": 0.8386752136752137,
+        "macro_precision": 0.7667690378209793,
+        "macro_recall": 0.6991349570697594,
+        "macro_f1": 0.7172901826381297,
+        "weighted_f1": 0.8290484512483749
+      }
+    }
+  },
+  "HGB_08": {
+    "model_family": "HistGradientBoosting",
+    "parameters": {
+      "learning_rate": 0.04,
+      "max_iter": 450,
+      "max_leaf_nodes": 31,
+      "min_samples_leaf": 40,
+      "l2_regularization": 5.0
+    },
+    "validation_metrics": {
+      "accuracy": 0.62002442002442,
+      "macro_precision": 0.6214603737773318,
+      "macro_recall": 0.6248112182203766,
+      "macro_f1": 0.6078444158635635,
+      "weighted_f1": 0.6164023917770936
+    },
+    "mean_area_macro_f1": 0.5364929472440474,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5135836385836385,
+        "macro_precision": 0.4752665356543792,
+        "macro_recall": 0.49669330005391493,
+        "macro_f1": 0.4635564089246549,
+        "weighted_f1": 0.47440517614598887
+      },
+      "Kristiansund": {
+        "accuracy": 0.4574175824175824,
+        "macro_precision": 0.4638708317783064,
+        "macro_recall": 0.4039324291830273,
+        "macro_f1": 0.3584453912398926,
+        "weighted_f1": 0.3855286805026732
+      },
+      "Stavanger": {
+        "accuracy": 0.561965811965812,
+        "macro_precision": 0.4839196290404492,
+        "macro_recall": 0.5055373729470364,
+        "macro_f1": 0.4741997047462478,
+        "weighted_f1": 0.5295563320634943
+      },
+      "Tromsø": {
+        "accuracy": 0.728021978021978,
+        "macro_precision": 0.6619904324206748,
+        "macro_recall": 0.6789793341148171,
+        "macro_f1": 0.6687994683573787,
+        "weighted_f1": 0.7289882343108579
+      },
+      "Ålesund": {
+        "accuracy": 0.8391330891330891,
+        "macro_precision": 0.7636050585911485,
+        "macro_recall": 0.6995842050580632,
+        "macro_f1": 0.7174637629520633,
+        "weighted_f1": 0.8298898487450688
+      }
+    }
+  },
+  "RF_01": {
+    "model_family": "RandomForest",
+    "parameters": {
+      "n_estimators": 400,
+      "max_depth": null,
+      "min_samples_leaf": 1,
+      "max_features": "sqrt"
+    },
+    "validation_metrics": {
+      "accuracy": 0.6089743589743589,
+      "macro_precision": 0.6109056861703334,
+      "macro_recall": 0.6140943032060032,
+      "macro_f1": 0.6032046078057014,
+      "weighted_f1": 0.6118152010169712
+    },
+    "mean_area_macro_f1": 0.5411608516507856,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5036630036630036,
+        "macro_precision": 0.4812021265153801,
+        "macro_recall": 0.4903057330391361,
+        "macro_f1": 0.4772354883013961,
+        "weighted_f1": 0.48577708561181526
+      },
+      "Kristiansund": {
+        "accuracy": 0.4462759462759463,
+        "macro_precision": 0.4513972322352638,
+        "macro_recall": 0.3915606555806161,
+        "macro_f1": 0.34733049369475505,
+        "weighted_f1": 0.3788229770851112
+      },
+      "Stavanger": {
+        "accuracy": 0.5349511599511599,
+        "macro_precision": 0.5082858214492515,
+        "macro_recall": 0.5120895552215736,
+        "macro_f1": 0.5006651951992792,
+        "weighted_f1": 0.5391136313878783
+      },
+      "Tromsø": {
+        "accuracy": 0.7216117216117216,
+        "macro_precision": 0.6568788406586646,
+        "macro_recall": 0.6659390394274306,
+        "macro_f1": 0.6604655941460895,
+        "weighted_f1": 0.7272512185990028
+      },
+      "Ålesund": {
+        "accuracy": 0.8383699633699634,
+        "macro_precision": 0.7582107734428476,
+        "macro_recall": 0.7039495005258471,
+        "macro_f1": 0.7201074869124081,
+        "weighted_f1": 0.8300195316030284
+      }
+    }
+  },
+  "RF_02": {
+    "model_family": "RandomForest",
+    "parameters": {
+      "n_estimators": 400,
+      "max_depth": null,
+      "min_samples_leaf": 2,
+      "max_features": "sqrt"
+    },
+    "validation_metrics": {
+      "accuracy": 0.6170940170940171,
+      "macro_precision": 0.6096037810506086,
+      "macro_recall": 0.6152539571512298,
+      "macro_f1": 0.6027356976901715,
+      "weighted_f1": 0.6120693356852176
+    },
+    "mean_area_macro_f1": 0.5375174749218644,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5175518925518926,
+        "macro_precision": 0.48082910238360715,
+        "macro_recall": 0.5047858243886577,
+        "macro_f1": 0.4701056329300473,
+        "weighted_f1": 0.4802332252820836
+      },
+      "Kristiansund": {
+        "accuracy": 0.45573870573870573,
+        "macro_precision": 0.4406620331998168,
+        "macro_recall": 0.4091837168762933,
+        "macro_f1": 0.3725967513954447,
+        "weighted_f1": 0.39498100492360905
+      },
+      "Stavanger": {
+        "accuracy": 0.5583028083028083,
+        "macro_precision": 0.4891724993017832,
+        "macro_recall": 0.5040303463411019,
+        "macro_f1": 0.48623611111822324,
+        "weighted_f1": 0.5365748071885019
+      },
+      "Tromsø": {
+        "accuracy": 0.7266483516483516,
+        "macro_precision": 0.658651075721481,
+        "macro_recall": 0.6544247739086714,
+        "macro_f1": 0.6564340114514867,
+        "weighted_f1": 0.7261005447580728
+      },
+      "Ålesund": {
+        "accuracy": 0.8272283272283272,
+        "macro_precision": 0.7489464585433891,
+        "macro_recall": 0.6868397925119797,
+        "macro_f1": 0.7022148677141201,
+        "weighted_f1": 0.8168239502346768
+      }
+    }
+  },
+  "RF_03": {
+    "model_family": "RandomForest",
+    "parameters": {
+      "n_estimators": 500,
+      "max_depth": 24,
+      "min_samples_leaf": 2,
+      "max_features": "sqrt"
+    },
+    "validation_metrics": {
+      "accuracy": 0.6170329670329671,
+      "macro_precision": 0.6099181158276398,
+      "macro_recall": 0.6137314557479376,
+      "macro_f1": 0.6006255574239288,
+      "weighted_f1": 0.6099461550422186
+    },
+    "mean_area_macro_f1": 0.5348477377996868,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5129731379731379,
+        "macro_precision": 0.4738444318760971,
+        "macro_recall": 0.5003843927993189,
+        "macro_f1": 0.45339570420730274,
+        "weighted_f1": 0.4643680404826754
+      },
+      "Kristiansund": {
+        "accuracy": 0.45634920634920634,
+        "macro_precision": 0.4404812292414988,
+        "macro_recall": 0.4122991106710961,
+        "macro_f1": 0.37483932050672536,
+        "weighted_f1": 0.3947326534991751
+      },
+      "Stavanger": {
+        "accuracy": 0.557997557997558,
+        "macro_precision": 0.48341049941588105,
+        "macro_recall": 0.49911062057878136,
+        "macro_f1": 0.48051661627970316,
+        "weighted_f1": 0.5320120357070618
+      },
+      "Tromsø": {
+        "accuracy": 0.7278693528693528,
+        "macro_precision": 0.6609185441349454,
+        "macro_recall": 0.6588360760774996,
+        "macro_f1": 0.6598566011989423,
+        "weighted_f1": 0.7273877007729221
+      },
+      "Ålesund": {
+        "accuracy": 0.82997557997558,
+        "macro_precision": 0.756174542483364,
+        "macro_recall": 0.6893517934522032,
+        "macro_f1": 0.70563044680576,
+        "weighted_f1": 0.8193952466908393
+      }
+    }
+  },
+  "RF_04": {
+    "model_family": "RandomForest",
+    "parameters": {
+      "n_estimators": 500,
+      "max_depth": 32,
+      "min_samples_leaf": 2,
+      "max_features": "sqrt"
+    },
+    "validation_metrics": {
+      "accuracy": 0.6184065934065934,
+      "macro_precision": 0.6115043010191786,
+      "macro_recall": 0.616889623047587,
+      "macro_f1": 0.6040273905297537,
+      "weighted_f1": 0.6131944066191883
+    },
+    "mean_area_macro_f1": 0.5393450432067304,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5180097680097681,
+        "macro_precision": 0.48242341124172533,
+        "macro_recall": 0.5051679997560012,
+        "macro_f1": 0.4704200935058989,
+        "weighted_f1": 0.4805724260165307
+      },
+      "Kristiansund": {
+        "accuracy": 0.4565018315018315,
+        "macro_precision": 0.4411908007126973,
+        "macro_recall": 0.40969820087880615,
+        "macro_f1": 0.3731613239436358,
+        "weighted_f1": 0.39580699330825175
+      },
+      "Stavanger": {
+        "accuracy": 0.5615079365079365,
+        "macro_precision": 0.4927737383478014,
+        "macro_recall": 0.5067237957085695,
+        "macro_f1": 0.48802641348674886,
+        "weighted_f1": 0.5386436541893805
+      },
+      "Tromsø": {
+        "accuracy": 0.7275641025641025,
+        "macro_precision": 0.6608143313605083,
+        "macro_recall": 0.6588893345761924,
+        "macro_f1": 0.659834319584134,
+        "weighted_f1": 0.727063677559121
+      },
+      "Ålesund": {
+        "accuracy": 0.8284493284493285,
+        "macro_precision": 0.7511389204405511,
+        "macro_recall": 0.6898511702801771,
+        "macro_f1": 0.705283065513234,
+        "weighted_f1": 0.8183018476436174
+      }
+    }
+  },
+  "RF_05": {
+    "model_family": "RandomForest",
+    "parameters": {
+      "n_estimators": 500,
+      "max_depth": null,
+      "min_samples_leaf": 4,
+      "max_features": "sqrt"
+    },
+    "validation_metrics": {
+      "accuracy": 0.6146825396825397,
+      "macro_precision": 0.6144349233978607,
+      "macro_recall": 0.6069640148092721,
+      "macro_f1": 0.5907438131083449,
+      "weighted_f1": 0.599932131765439
+    },
+    "mean_area_macro_f1": 0.5185248205816195,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5123626373626373,
+        "macro_precision": 0.47753282651162166,
+        "macro_recall": 0.5001365285415624,
+        "macro_f1": 0.4362747861461887,
+        "weighted_f1": 0.4484169538326616
+      },
+      "Kristiansund": {
+        "accuracy": 0.46016483516483514,
+        "macro_precision": 0.4391130210726654,
+        "macro_recall": 0.4245973705668447,
+        "macro_f1": 0.3816711424645949,
+        "weighted_f1": 0.3963637414166206
+      },
+      "Stavanger": {
+        "accuracy": 0.565018315018315,
+        "macro_precision": 0.4725546876998333,
+        "macro_recall": 0.4876877980220335,
+        "macro_f1": 0.45089430451029794,
+        "weighted_f1": 0.5111841643732764
+      },
+      "Tromsø": {
+        "accuracy": 0.7200854700854701,
+        "macro_precision": 0.6519372097240951,
+        "macro_recall": 0.6385652666055898,
+        "macro_f1": 0.6431617174646167,
+        "weighted_f1": 0.7108795584929206
+      },
+      "Ålesund": {
+        "accuracy": 0.8157814407814408,
+        "macro_precision": 0.750300906270505,
+        "macro_recall": 0.6661128218650283,
+        "macro_f1": 0.6806221523223991,
+        "weighted_f1": 0.8019476822372754
+      }
+    }
+  },
+  "RF_06": {
+    "model_family": "RandomForest",
+    "parameters": {
+      "n_estimators": 400,
+      "max_depth": null,
+      "min_samples_leaf": 2,
+      "max_features": 0.5
+    },
+    "validation_metrics": {
+      "accuracy": 0.6115079365079366,
+      "macro_precision": 0.6044536392541238,
+      "macro_recall": 0.6118398359540514,
+      "macro_f1": 0.6011090763464063,
+      "weighted_f1": 0.6100967107304969
+    },
+    "mean_area_macro_f1": 0.5441017607742563,
+    "per_area_validation": {
+      "Bergen": {
+        "accuracy": 0.5086996336996337,
+        "macro_precision": 0.4746335429390846,
+        "macro_recall": 0.4957984316209825,
+        "macro_f1": 0.4719729213681663,
+        "weighted_f1": 0.48140602946967864
+      },
+      "Kristiansund": {
+        "accuracy": 0.4583333333333333,
+        "macro_precision": 0.44713792115554685,
+        "macro_recall": 0.41433785945818147,
+        "macro_f1": 0.3871388375292683,
+        "weighted_f1": 0.4088908447635029
+      },
+      "Stavanger": {
+        "accuracy": 0.539072039072039,
+        "macro_precision": 0.49006421392661864,
+        "macro_recall": 0.5005050308123483,
+        "macro_f1": 0.4910475531965021,
+        "weighted_f1": 0.5349544770271879
+      },
+      "Tromsø": {
+        "accuracy": 0.721001221001221,
+        "macro_precision": 0.6555414953811348,
+        "macro_recall": 0.666049546252334,
+        "macro_f1": 0.6602102259913072,
+        "weighted_f1": 0.7242583465494112
+      },
+      "Ålesund": {
+        "accuracy": 0.8304334554334555,
+        "macro_precision": 0.7438270924668107,
+        "macro_recall": 0.6963640037310844,
+        "macro_f1": 0.7101392657860378,
+        "weighted_f1": 0.8219168464914612
+      }
+    }
+  }
+}

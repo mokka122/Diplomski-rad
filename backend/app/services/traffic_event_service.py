@@ -1,7 +1,25 @@
-from dataclasses import dataclass
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Dict, Optional
+from dataclasses import (
+    dataclass,
+)
+
+from datetime import (
+    datetime,
+    timezone,
+)
+
+from enum import (
+    Enum,
+)
+
+from typing import (
+    Dict,
+    Optional,
+)
+
+
+from app.repositories.redis_geofence_state_repository import (
+    RedisGeofenceStateRepository,
+)
 
 from app.services.alesund_geofence import (
     is_inside_alesund,
@@ -13,7 +31,10 @@ from app.services.alesund_geofence import (
 # ======================================================================================
 
 
-class TrafficEventType(str, Enum):
+class TrafficEventType(
+    str,
+    Enum,
+):
     ENTRY = "ENTRY"
     EXIT = "EXIT"
 
@@ -25,6 +46,7 @@ class TrafficEventType(str, Enum):
 
 @dataclass
 class TrafficEvent:
+
     mmsi: str
 
     event_type: TrafficEventType
@@ -42,9 +64,13 @@ class TrafficEvent:
 
     source: str = "BarentsWatch"
 
-    def to_dict(self) -> dict:
+    def to_dict(
+        self,
+    ) -> dict:
+
         return {
-            "mmsi": self.mmsi,
+            "mmsi":
+                self.mmsi,
 
             "event_type":
                 self.event_type.value,
@@ -79,6 +105,7 @@ class TrafficEvent:
 
 @dataclass
 class VesselGeofenceState:
+
     inside: bool
 
     last_timestamp: datetime
@@ -94,45 +121,180 @@ class VesselGeofenceState:
 
 class TrafficEventService:
     """
-    Detects vessel transitions across the configured Ålesund geofence.
+    Detect vessel transitions across the OceanEye Ålesund
+    operational study-area geofence.
 
-    Example:
+    Transition semantics:
 
         outside -> inside = ENTRY
         inside  -> outside = EXIT
 
-    The first observed AIS message for a vessel only establishes
-    state and does NOT create an event.
+    State is cached in Python memory for speed and persisted
+    in Redis so normal application restarts do not destroy
+    boundary-transition context.
+
+    If no previous state exists in either memory or Redis,
+    the first observation establishes state only and does not
+    generate an event.
     """
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+    ) -> None:
+
         self._states: Dict[
             str,
             VesselGeofenceState,
         ] = {}
 
+        self.redis_repository = (
+            RedisGeofenceStateRepository()
+        )
+
+        # These diagnostic counters describe events detected
+        # during the current FastAPI process lifetime.
+        #
+        # Persistent hourly counts remain stored separately
+        # in RedisTrafficRepository.
         self._entry_count = 0
         self._exit_count = 0
+
+    # ==================================================================================
+    # LOAD PREVIOUS STATE
+    # ==================================================================================
+
+    async def _get_previous_state(
+        self,
+        mmsi: str,
+    ) -> VesselGeofenceState | None:
+
+        # ----------------------------------------------------------------------------------
+        # Fast in-memory path
+        # ----------------------------------------------------------------------------------
+
+        memory_state = (
+            self._states.get(
+                mmsi
+            )
+        )
+
+        if memory_state is not None:
+            return memory_state
+
+        # ----------------------------------------------------------------------------------
+        # Restart recovery path
+        # ----------------------------------------------------------------------------------
+
+        redis_state = (
+            await self
+            .redis_repository
+            .get_state(
+                mmsi
+            )
+        )
+
+        if redis_state is None:
+            return None
+
+        restored_state = (
+            VesselGeofenceState(
+                inside=(
+                    redis_state[
+                        "inside"
+                    ]
+                ),
+
+                last_timestamp=(
+                    redis_state[
+                        "last_timestamp"
+                    ]
+                ),
+
+                latitude=(
+                    redis_state[
+                        "latitude"
+                    ]
+                ),
+
+                longitude=(
+                    redis_state[
+                        "longitude"
+                    ]
+                ),
+            )
+        )
+
+        # Cache restored state locally.
+        self._states[
+            mmsi
+        ] = restored_state
+
+        return restored_state
+
+    # ==================================================================================
+    # SAVE CURRENT STATE
+    # ==================================================================================
+
+    async def _save_state(
+        self,
+        mmsi: str,
+        state: VesselGeofenceState,
+    ) -> None:
+
+        # Local cache
+        self._states[
+            mmsi
+        ] = state
+
+        # Persistent Redis state
+        await (
+            self.redis_repository
+            .save_state(
+                mmsi=mmsi,
+                inside=state.inside,
+                last_timestamp=(
+                    state.last_timestamp
+                ),
+                latitude=(
+                    state.latitude
+                ),
+                longitude=(
+                    state.longitude
+                ),
+            )
+        )
 
     # ==================================================================================
     # POSITION PROCESSING
     # ==================================================================================
 
-    def process_position(
+    async def process_position(
         self,
         vessel: dict,
-    ) -> Optional[TrafficEvent]:
+    ) -> Optional[
+        TrafficEvent
+    ]:
 
-        mmsi = vessel.get(
-            "mmsi"
+        # ----------------------------------------------------------------------------------
+        # Required vessel fields
+        # ----------------------------------------------------------------------------------
+
+        mmsi = (
+            vessel.get(
+                "mmsi"
+            )
         )
 
-        latitude = vessel.get(
-            "latitude"
+        latitude = (
+            vessel.get(
+                "latitude"
+            )
         )
 
-        longitude = vessel.get(
-            "longitude"
+        longitude = (
+            vessel.get(
+                "longitude"
+            )
         )
 
         if (
@@ -147,6 +309,7 @@ class TrafficEventService:
         )
 
         try:
+
             latitude = float(
                 latitude
             )
@@ -159,16 +322,24 @@ class TrafficEventService:
             TypeError,
             ValueError,
         ):
+
             return None
 
-        timestamp = vessel.get(
-            "timestamp"
+        # ----------------------------------------------------------------------------------
+        # Timestamp
+        # ----------------------------------------------------------------------------------
+
+        timestamp = (
+            vessel.get(
+                "timestamp"
+            )
         )
 
         if not isinstance(
             timestamp,
             datetime,
         ):
+
             timestamp = (
                 datetime.now(
                     timezone.utc
@@ -176,9 +347,24 @@ class TrafficEventService:
             )
 
         elif timestamp.tzinfo is None:
-            timestamp = timestamp.replace(
-                tzinfo=timezone.utc
+
+            timestamp = (
+                timestamp.replace(
+                    tzinfo=timezone.utc
+                )
             )
+
+        else:
+
+            timestamp = (
+                timestamp.astimezone(
+                    timezone.utc
+                )
+            )
+
+        # ----------------------------------------------------------------------------------
+        # Current geofence state
+        # ----------------------------------------------------------------------------------
 
         current_inside = (
             is_inside_alesund(
@@ -188,35 +374,41 @@ class TrafficEventService:
         )
 
         previous_state = (
-            self._states.get(
+            await self
+            ._get_previous_state(
                 mmsi
             )
         )
 
         # ----------------------------------------------------------------------------------
-        # First observation:
+        # FIRST OBSERVATION
+        # ----------------------------------------------------------------------------------
         #
-        # establish vessel state only.
+        # No known previous state exists.
         #
-        # We cannot know whether a vessel actually crossed the boundary before OceanEye
-        # started observing it.
+        # We cannot infer a real crossing simply from seeing
+        # the vessel for the first time.
         # ----------------------------------------------------------------------------------
 
         if previous_state is None:
 
-            self._states[
-                mmsi
-            ] = VesselGeofenceState(
-                inside=current_inside,
-                last_timestamp=timestamp,
-                latitude=latitude,
-                longitude=longitude,
+            await self._save_state(
+                mmsi=mmsi,
+
+                state=(
+                    VesselGeofenceState(
+                        inside=current_inside,
+                        last_timestamp=timestamp,
+                        latitude=latitude,
+                        longitude=longitude,
+                    )
+                ),
             )
 
             return None
 
         # ----------------------------------------------------------------------------------
-        # Ignore stale/out-of-order positions
+        # IGNORE STALE / OUT-OF-ORDER AIS
         # ----------------------------------------------------------------------------------
 
         if (
@@ -224,6 +416,7 @@ class TrafficEventService:
             <
             previous_state.last_timestamp
         ):
+
             return None
 
         event = None
@@ -237,23 +430,37 @@ class TrafficEventService:
             and current_inside
         ):
 
-            event = TrafficEvent(
-                mmsi=mmsi,
-                event_type=(
-                    TrafficEventType.ENTRY
-                ),
-                timestamp=timestamp,
-                latitude=latitude,
-                longitude=longitude,
-                vessel_name=vessel.get(
-                    "vessel_name"
-                ),
-                ship_type=vessel.get(
-                    "ship_type"
-                ),
-                sog=vessel.get(
-                    "sog"
-                ),
+            event = (
+                TrafficEvent(
+                    mmsi=mmsi,
+
+                    event_type=(
+                        TrafficEventType.ENTRY
+                    ),
+
+                    timestamp=timestamp,
+
+                    latitude=latitude,
+                    longitude=longitude,
+
+                    vessel_name=(
+                        vessel.get(
+                            "vessel_name"
+                        )
+                    ),
+
+                    ship_type=(
+                        vessel.get(
+                            "ship_type"
+                        )
+                    ),
+
+                    sog=(
+                        vessel.get(
+                            "sog"
+                        )
+                    ),
+                )
             )
 
             self._entry_count += 1
@@ -267,38 +474,56 @@ class TrafficEventService:
             and not current_inside
         ):
 
-            event = TrafficEvent(
-                mmsi=mmsi,
-                event_type=(
-                    TrafficEventType.EXIT
-                ),
-                timestamp=timestamp,
-                latitude=latitude,
-                longitude=longitude,
-                vessel_name=vessel.get(
-                    "vessel_name"
-                ),
-                ship_type=vessel.get(
-                    "ship_type"
-                ),
-                sog=vessel.get(
-                    "sog"
-                ),
+            event = (
+                TrafficEvent(
+                    mmsi=mmsi,
+
+                    event_type=(
+                        TrafficEventType.EXIT
+                    ),
+
+                    timestamp=timestamp,
+
+                    latitude=latitude,
+                    longitude=longitude,
+
+                    vessel_name=(
+                        vessel.get(
+                            "vessel_name"
+                        )
+                    ),
+
+                    ship_type=(
+                        vessel.get(
+                            "ship_type"
+                        )
+                    ),
+
+                    sog=(
+                        vessel.get(
+                            "sog"
+                        )
+                    ),
+                )
             )
 
             self._exit_count += 1
 
         # ----------------------------------------------------------------------------------
-        # Update current state
+        # SAVE LATEST STATE
         # ----------------------------------------------------------------------------------
 
-        self._states[
-            mmsi
-        ] = VesselGeofenceState(
-            inside=current_inside,
-            last_timestamp=timestamp,
-            latitude=latitude,
-            longitude=longitude,
+        await self._save_state(
+            mmsi=mmsi,
+
+            state=(
+                VesselGeofenceState(
+                    inside=current_inside,
+                    last_timestamp=timestamp,
+                    latitude=latitude,
+                    longitude=longitude,
+                )
+            ),
         )
 
         return event
@@ -307,7 +532,9 @@ class TrafficEventService:
     # STATUS
     # ==================================================================================
 
-    def get_status(self) -> dict:
+    def get_status(
+        self,
+    ) -> dict:
 
         vessels_inside = sum(
             1
@@ -333,10 +560,19 @@ class TrafficEventService:
         }
 
     # ==================================================================================
-    # TEST / RESET SUPPORT
+    # TEST / MEMORY RESET
     # ==================================================================================
 
-    def reset(self) -> None:
+    def reset(
+        self,
+    ) -> None:
+        """
+        Reset only the current-process diagnostic state.
+
+        Redis-backed vessel geofence states are intentionally
+        not deleted by this helper.
+        """
+
         self._states.clear()
 
         self._entry_count = 0

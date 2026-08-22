@@ -1,0 +1,128 @@
+{
+  "experiment": "OceanEye V5 Deep Temporal GRU",
+  "device": "cpu",
+  "sequence_length": 48,
+  "features": [
+    "total_events",
+    "arrivals",
+    "departures",
+    "unique_vessels",
+    "passenger_events",
+    "cargo_events",
+    "fishing_events",
+    "tanker_events",
+    "auxiliary_events",
+    "tug_events",
+    "hour_sin",
+    "hour_cos",
+    "day_of_week_sin",
+    "day_of_week_cos",
+    "month_sin",
+    "month_cos",
+    "is_weekend"
+  ],
+  "areas": [
+    "Bergen",
+    "Kristiansund",
+    "Stavanger",
+    "Tromsø",
+    "Ålesund"
+  ],
+  "total_parameters": 166507,
+  "trainable_parameters": 166507,
+  "best_validation_macro_f1": 0.5812946413250878,
+  "test_metrics": {
+    "accuracy": 0.6072496601721794,
+    "macro_precision": 0.6343667343672026,
+    "macro_recall": 0.599703231797208,
+    "macro_f1": 0.5800576807417782,
+    "weighted_f1": 0.583766044729659
+  },
+  "per_area_test": {
+    "Bergen": {
+      "accuracy": 0.48844585410058905,
+      "macro_precision": 0.3345408868232634,
+      "macro_recall": 0.4898037077426391,
+      "macro_f1": 0.3859119318353894,
+      "weighted_f1": 0.40214054228438795
+    },
+    "Kristiansund": {
+      "accuracy": 0.46307204349796105,
+      "macro_precision": 0.45448298127479014,
+      "macro_recall": 0.4355566963451985,
+      "macro_f1": 0.3472720264896023,
+      "weighted_f1": 0.3714609291600127
+    },
+    "Stavanger": {
+      "accuracy": 0.5727231536021749,
+      "macro_precision": 0.3781078389958361,
+      "macro_recall": 0.4500941987593823,
+      "macro_f1": 0.3956293842663547,
+      "weighted_f1": 0.4803381997951106
+    },
+    "Tromsø": {
+      "accuracy": 0.6674218396012687,
+      "macro_precision": 0.602454858176012,
+      "macro_recall": 0.5879303189856085,
+      "macro_f1": 0.5884541908800048,
+      "weighted_f1": 0.6476762064654513
+    },
+    "Ålesund": {
+      "accuracy": 0.8445854100589035,
+      "macro_precision": 0.7903286803587323,
+      "macro_recall": 0.7557173948695713,
+      "macro_f1": 0.76754615374817,
+      "weighted_f1": 0.8387393281227234
+    }
+  },
+  "confusion_matrix": [
+    [
+      1881,
+      300,
+      978
+    ],
+    [
+      1113,
+      1237,
+      1443
+    ],
+    [
+      388,
+      112,
+      3583
+    ]
+  ],
+  "classification_report": {
+    "LOW": {
+      "precision": 0.5561797752808989,
+      "recall": 0.5954415954415955,
+      "f1-score": 0.575141415685675,
+      "support": 3159.0
+    },
+    "MEDIUM": {
+      "precision": 0.7501516070345664,
+      "recall": 0.3261270761929871,
+      "f1-score": 0.4546122748989342,
+      "support": 3793.0
+    },
+    "HIGH": {
+      "precision": 0.5967688207861426,
+      "recall": 0.8775410237570413,
+      "f1-score": 0.7104193516407257,
+      "support": 4083.0
+    },
+    "accuracy": 0.6072496601721794,
+    "macro avg": {
+      "precision": 0.6343667343672026,
+      "recall": 0.599703231797208,
+      "f1-score": 0.5800576807417782,
+      "support": 11035.0
+    },
+    "weighted avg": {
+      "precision": 0.6378707794167912,
+      "recall": 0.6072496601721794,
+      "f1-score": 0.583766044729659,
+      "support": 11035.0
+    }
+  }
+}

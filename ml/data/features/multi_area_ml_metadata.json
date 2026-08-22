@@ -1,0 +1,104 @@
+{
+  "dataset_name": "OceanEye Multi-Area ML V2",
+  "study_areas": [
+    "Bergen",
+    "Kristiansund",
+    "Stavanger",
+    "Tromsø",
+    "Ålesund"
+  ],
+  "temporal_split": {
+    "train": "2020-01-01 through 2024-12-31",
+    "validation": "2025-01-01 through 2025-09-30",
+    "test": "2025-10-01 through 2025-12-31"
+  },
+  "prediction_horizon_hours": 1,
+  "target_source": "future_total_events_1h",
+  "traffic_level_definition": {
+    "LOW": "0 events in next hour",
+    "MEDIUM": "1 or more events but below area-specific HIGH threshold",
+    "HIGH": "at or above area-specific TRAIN q90 threshold"
+  },
+  "thresholds": {
+    "Bergen": {
+      "q90_raw": 2.0,
+      "high_threshold": 2
+    },
+    "Kristiansund": {
+      "q90_raw": 2.0,
+      "high_threshold": 2
+    },
+    "Stavanger": {
+      "q90_raw": 2.0,
+      "high_threshold": 2
+    },
+    "Tromsø": {
+      "q90_raw": 3.0,
+      "high_threshold": 3
+    },
+    "Ålesund": {
+      "q90_raw": 8.0,
+      "high_threshold": 8
+    }
+  },
+  "numeric_features": [
+    "total_events",
+    "arrivals",
+    "departures",
+    "unique_vessels",
+    "passenger_events",
+    "cargo_events",
+    "fishing_events",
+    "tanker_events",
+    "auxiliary_events",
+    "tug_events",
+    "hour_local",
+    "day_of_week",
+    "month",
+    "day_of_year",
+    "is_weekend",
+    "total_events_lag_1h",
+    "total_events_lag_2h",
+    "total_events_lag_3h",
+    "total_events_lag_6h",
+    "total_events_lag_24h",
+    "arrivals_lag_1h",
+    "arrivals_lag_2h",
+    "arrivals_lag_3h",
+    "arrivals_lag_24h",
+    "departures_lag_1h",
+    "departures_lag_2h",
+    "departures_lag_3h",
+    "departures_lag_24h",
+    "unique_vessels_lag_1h",
+    "unique_vessels_lag_24h",
+    "total_events_rolling_mean_3h",
+    "total_events_rolling_mean_6h",
+    "total_events_rolling_mean_24h",
+    "arrivals_rolling_mean_3h",
+    "arrivals_rolling_mean_6h",
+    "arrivals_rolling_mean_24h",
+    "hour_sin",
+    "hour_cos",
+    "day_of_week_sin",
+    "day_of_week_cos",
+    "month_sin",
+    "month_cos",
+    "centroid_lat",
+    "centroid_lon"
+  ],
+  "categorical_features": [
+    "study_area"
+  ],
+  "class_mapping": {
+    "LOW": 0,
+    "MEDIUM": 1,
+    "HIGH": 2
+  },
+  "rows": 262915,
+  "rows_by_split": {
+    "train": 219120,
+    "validation": 32760,
+    "test": 11035
+  }
+}

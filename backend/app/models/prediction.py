@@ -223,6 +223,36 @@ class TrafficPredictionRequest(BaseModel):
         le=1,
     )
 
+    # ==================================================================================
+    # MULTI-AREA CONTEXT
+    # ==================================================================================
+
+    centroid_lat: float = Field(
+        ge=-90,
+        le=90,
+        description=(
+            "Approximate centroid latitude "
+            "of the selected study area"
+        ),
+    )
+
+    centroid_lon: float = Field(
+        ge=-180,
+        le=180,
+        description=(
+            "Approximate centroid longitude "
+            "of the selected study area"
+        ),
+    )
+
+    study_area: str = Field(
+        min_length=1,
+        description=(
+            "Study area category used by "
+            "the final Multi-Area model"
+        ),
+    )
+
 
 class TrafficPredictionResponse(BaseModel):
     traffic_level: str

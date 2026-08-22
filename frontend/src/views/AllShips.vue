@@ -6,6 +6,10 @@ import {
   ref,
 } from "vue";
 
+import {
+  useRouter,
+} from "vue-router";
+
 import AppHeader from "../components/AppHeader.vue";
 
 import {
@@ -13,26 +17,41 @@ import {
 } from "../services/api";
 
 
-const vessels = ref([]);
+const router =
+  useRouter();
 
-const isLoading = ref(true);
-const errorMessage = ref("");
+const vessels =
+  ref([]);
 
-const searchQuery = ref("");
-const speedFilter = ref("all");
+const isLoading =
+  ref(true);
 
-const sortBy = ref("updated");
+const errorMessage =
+  ref("");
 
-const lastUpdated = ref(null);
+const searchQuery =
+  ref("");
 
-let refreshTimer = null;
+const speedFilter =
+  ref("all");
+
+const sortBy =
+  ref("updated");
+
+const lastUpdated =
+  ref(null);
+
+let refreshTimer =
+  null;
 
 
 /* =========================================================
    FORMATTERS
    ========================================================= */
 
-function vesselName(vessel) {
+function vesselName(
+  vessel,
+) {
   return (
     vessel?.vessel_name ||
     "Unknown vessel"
@@ -51,19 +70,27 @@ function formatNumber(
     return "—";
   }
 
-  const number = Number(value);
+  const number =
+    Number(value);
 
-  if (!Number.isFinite(number)) {
+  if (
+    !Number.isFinite(
+      number,
+    )
+  ) {
     return "—";
   }
 
-  return number.toFixed(
-    decimals,
-  );
+  return number
+    .toFixed(
+      decimals,
+    );
 }
 
 
-function formatTimestamp(timestamp) {
+function formatTimestamp(
+  timestamp,
+) {
   if (!timestamp) {
     return "—";
   }
@@ -73,56 +100,75 @@ function formatTimestamp(timestamp) {
   ).toLocaleString(
     "en-GB",
     {
-      dateStyle: "medium",
-      timeStyle: "short",
+      dateStyle:
+        "medium",
+
+      timeStyle:
+        "short",
     },
   );
 }
 
 
-function formatRelativeTime(timestamp) {
+function formatRelativeTime(
+  timestamp,
+) {
   if (!timestamp) {
     return "Unknown";
   }
 
   const time =
-    new Date(timestamp)
-      .getTime();
-
-  const now =
-    Date.now();
+    new Date(
+      timestamp,
+    ).getTime();
 
   const difference =
     Math.max(
       0,
-      now - time,
+      Date.now() -
+        time,
     );
 
   const seconds =
     Math.floor(
-      difference / 1000,
+      difference /
+      1000,
     );
 
-  if (seconds < 60) {
-    return `${seconds}s ago`;
+  if (
+    seconds < 60
+  ) {
+    return (
+      `${seconds}s ago`
+    );
   }
 
   const minutes =
     Math.floor(
-      seconds / 60,
+      seconds /
+      60,
     );
 
-  if (minutes < 60) {
-    return `${minutes}m ago`;
+  if (
+    minutes < 60
+  ) {
+    return (
+      `${minutes}m ago`
+    );
   }
 
   const hours =
     Math.floor(
-      minutes / 60,
+      minutes /
+      60,
     );
 
-  if (hours < 24) {
-    return `${hours}h ago`;
+  if (
+    hours < 24
+  ) {
+    return (
+      `${hours}h ago`
+    );
   }
 
   return formatTimestamp(
@@ -135,21 +181,31 @@ function formatRelativeTime(timestamp) {
    SPEED
    ========================================================= */
 
-function speedCategory(vessel) {
+function speedCategory(
+  vessel,
+) {
   const speed =
     Number(
       vessel?.sog,
     );
 
-  if (!Number.isFinite(speed)) {
+  if (
+    !Number.isFinite(
+      speed,
+    )
+  ) {
     return "unknown";
   }
 
-  if (speed >= 15) {
+  if (
+    speed >= 15
+  ) {
     return "fast";
   }
 
-  if (speed >= 5) {
+  if (
+    speed >= 5
+  ) {
     return "moving";
   }
 
@@ -157,21 +213,29 @@ function speedCategory(vessel) {
 }
 
 
-function speedCategoryLabel(vessel) {
+function speedCategoryLabel(
+  vessel,
+) {
   const category =
     speedCategory(
       vessel,
     );
 
-  if (category === "fast") {
+  if (
+    category === "fast"
+  ) {
     return "Fast";
   }
 
-  if (category === "moving") {
+  if (
+    category === "moving"
+  ) {
     return "Under way";
   }
 
-  if (category === "slow") {
+  if (
+    category === "slow"
+  ) {
     return "Slow";
   }
 
@@ -180,7 +244,7 @@ function speedCategoryLabel(vessel) {
 
 
 /* =========================================================
-   SIMPLE SHIP TYPE LABELS
+   SHIP TYPES
    ========================================================= */
 
 function shipTypeLabel(
@@ -191,11 +255,17 @@ function shipTypeLabel(
       shipType,
     );
 
-  if (!Number.isFinite(value)) {
+  if (
+    !Number.isFinite(
+      value,
+    )
+  ) {
     return "Unknown";
   }
 
-  if (value === 30) {
+  if (
+    value === 30
+  ) {
     return "Fishing";
   }
 
@@ -240,153 +310,151 @@ function shipTypeLabel(
       55,
       58,
       59,
-    ].includes(value)
+    ].includes(
+      value,
+    )
   ) {
     return "Auxiliary";
   }
 
-  return `AIS ${value}`;
+  return (
+    `AIS ${value}`
+  );
 }
 
 
 /* =========================================================
-   SEARCH / FILTER / SORT
+   FILTER
    ========================================================= */
 
-const filteredVessels = computed(() => {
-  const query =
-    searchQuery.value
-      .trim()
-      .toLowerCase();
+const filteredVessels =
+  computed(() => {
+    const query =
+      searchQuery
+        .value
+        .trim()
+        .toLowerCase();
 
-  let result =
-    [...vessels.value];
+    let result =
+      [
+        ...vessels.value,
+      ];
 
+    if (query) {
+      result =
+        result.filter(
+          (vessel) => {
+            const name =
+              vesselName(
+                vessel,
+              )
+                .toLowerCase();
 
-  if (query) {
-    result =
-      result.filter(
-        (vessel) => {
-          const name =
-            vesselName(
+            const mmsi =
+              String(
+                vessel?.mmsi ??
+                "",
+              )
+                .toLowerCase();
+
+            return (
+              name.includes(
+                query,
+              ) ||
+              mmsi.includes(
+                query,
+              )
+            );
+          },
+        );
+    }
+
+    if (
+      speedFilter.value !==
+      "all"
+    ) {
+      result =
+        result.filter(
+          (vessel) =>
+            speedCategory(
               vessel,
-            )
-              .toLowerCase();
+            ) ===
+            speedFilter.value,
+        );
+    }
 
-          const mmsi =
-            String(
-              vessel?.mmsi ??
-              "",
-            ).toLowerCase();
+    result.sort(
+      (
+        first,
+        second,
+      ) => {
+        if (
+          sortBy.value ===
+          "name"
+        ) {
+          return vesselName(
+            first,
+          ).localeCompare(
+            vesselName(
+              second,
+            ),
+          );
+        }
+
+        if (
+          sortBy.value ===
+          "speed"
+        ) {
+          const firstSpeed =
+            Number(
+              first?.sog,
+            );
+
+          const secondSpeed =
+            Number(
+              second?.sog,
+            );
 
           return (
-            name.includes(
-              query,
-            ) ||
-            mmsi.includes(
-              query,
+            (
+              Number.isFinite(
+                secondSpeed,
+              )
+                ? secondSpeed
+                : -1
+            ) -
+            (
+              Number.isFinite(
+                firstSpeed,
+              )
+                ? firstSpeed
+                : -1
             )
           );
-        },
-      );
-  }
-
-
-  if (
-    speedFilter.value !==
-    "all"
-  ) {
-    result =
-      result.filter(
-        (vessel) =>
-          speedCategory(
-            vessel,
-          ) ===
-          speedFilter.value,
-      );
-  }
-
-
-  result.sort(
-    (
-      first,
-      second,
-    ) => {
-      if (
-        sortBy.value ===
-        "name"
-      ) {
-        return vesselName(
-          first,
-        ).localeCompare(
-          vesselName(
-            second,
-          ),
-        );
-      }
-
-
-      if (
-        sortBy.value ===
-        "speed"
-      ) {
-        const firstSpeed =
-          Number(
-            first?.sog,
-          );
-
-        const secondSpeed =
-          Number(
-            second?.sog,
-          );
+        }
 
         return (
-          (
-            Number.isFinite(
-              secondSpeed,
-            )
-              ? secondSpeed
-              : -1
-          ) -
-          (
-            Number.isFinite(
-              firstSpeed,
-            )
-              ? firstSpeed
-              : -1
-          )
+          new Date(
+            second?.timestamp ??
+            0,
+          ).getTime() -
+          new Date(
+            first?.timestamp ??
+            0,
+          ).getTime()
         );
-      }
+      },
+    );
+
+    return result;
+  });
 
 
-      const firstTimestamp =
-        new Date(
-          first?.timestamp ??
-          0,
-        ).getTime();
-
-      const secondTimestamp =
-        new Date(
-          second?.timestamp ??
-          0,
-        ).getTime();
-
-      return (
-        secondTimestamp -
-        firstTimestamp
-      );
-    },
+const vesselCount =
+  computed(
+    () =>
+      vessels.value.length,
   );
-
-
-  return result;
-});
-
-
-const vesselCount = computed(
-  () =>
-    vessels.value.length,
-);
 
 
 const visibleVesselCount =
@@ -398,28 +466,55 @@ const visibleVesselCount =
   );
 
 
-const movingCount = computed(
-  () =>
-    vessels.value.filter(
-      (vessel) =>
-        speedCategory(
-          vessel,
-        ) ===
-        "moving",
-    ).length,
-);
+const movingCount =
+  computed(
+    () =>
+      vessels.value
+        .filter(
+          (vessel) =>
+            speedCategory(
+              vessel,
+            ) ===
+            "moving",
+        )
+        .length,
+  );
 
 
-const fastCount = computed(
-  () =>
-    vessels.value.filter(
-      (vessel) =>
-        speedCategory(
-          vessel,
-        ) ===
-        "fast",
-    ).length,
-);
+const fastCount =
+  computed(
+    () =>
+      vessels.value
+        .filter(
+          (vessel) =>
+            speedCategory(
+              vessel,
+            ) ===
+            "fast",
+        )
+        .length,
+  );
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+async function viewOnMap(
+  vessel,
+) {
+  await router.push({
+    name:
+      "dashboard",
+
+    query: {
+      vessel:
+        String(
+          vessel.mmsi,
+        ),
+    },
+  });
+}
 
 
 /* =========================================================
@@ -428,13 +523,15 @@ const fastCount = computed(
 
 async function loadVessels() {
   try {
-    errorMessage.value = "";
+    errorMessage.value =
+      "";
 
     const data =
       await getCurrentVessels();
 
     vessels.value =
-      data.vessels ?? [];
+      data.vessels ??
+      [];
 
     lastUpdated.value =
       new Date();
@@ -442,7 +539,8 @@ async function loadVessels() {
     errorMessage.value =
       error.message;
   } finally {
-    isLoading.value = false;
+    isLoading.value =
+      false;
   }
 }
 
@@ -459,7 +557,9 @@ onMounted(async () => {
 
 
 onUnmounted(() => {
-  if (refreshTimer) {
+  if (
+    refreshTimer
+  ) {
     clearInterval(
       refreshTimer,
     );
@@ -473,10 +573,6 @@ onUnmounted(() => {
     <AppHeader />
 
     <div class="vessels-page">
-      <!-- =====================================================
-           PAGE HEADER
-           ===================================================== -->
-
       <section class="vessels-intro">
         <div>
           <p class="eyebrow">
@@ -494,7 +590,9 @@ onUnmounted(() => {
         </div>
 
         <div class="vessels-live-state">
-          <span class="dashboard-refresh-dot"></span>
+          <span
+            class="dashboard-refresh-dot"
+          ></span>
 
           <div>
             <strong>
@@ -514,13 +612,11 @@ onUnmounted(() => {
         </div>
       </section>
 
-      <!-- =====================================================
-           SUMMARY
-           ===================================================== -->
-
       <section class="vessels-summary">
         <article>
-          <span>Total vessels</span>
+          <span>
+            Total vessels
+          </span>
 
           <strong>
             {{ vesselCount }}
@@ -528,7 +624,9 @@ onUnmounted(() => {
         </article>
 
         <article>
-          <span>Under way</span>
+          <span>
+            Under way
+          </span>
 
           <strong>
             {{ movingCount }}
@@ -536,7 +634,9 @@ onUnmounted(() => {
         </article>
 
         <article>
-          <span>Fast vessels</span>
+          <span>
+            Fast vessels
+          </span>
 
           <strong>
             {{ fastCount }}
@@ -544,17 +644,15 @@ onUnmounted(() => {
         </article>
 
         <article>
-          <span>Visible results</span>
+          <span>
+            Visible results
+          </span>
 
           <strong>
             {{ visibleVesselCount }}
           </strong>
         </article>
       </section>
-
-      <!-- =====================================================
-           DIRECTORY CARD
-           ===================================================== -->
 
       <section class="vessel-directory">
         <div class="vessel-directory-toolbar">
@@ -577,8 +675,12 @@ onUnmounted(() => {
             <input
               v-model="searchQuery"
               type="search"
-              placeholder="Search vessel name or MMSI..."
-              aria-label="Search vessels"
+              placeholder="
+                Search vessel name or MMSI...
+              "
+              aria-label="
+                Search vessels
+              "
             />
           </div>
 
@@ -606,10 +708,6 @@ onUnmounted(() => {
           </div>
         </div>
 
-        <!-- ===================================================
-             FILTERS
-             =================================================== -->
-
         <div class="vessel-filters">
           <button
             type="button"
@@ -619,7 +717,8 @@ onUnmounted(() => {
                 'all',
             }"
             @click="
-              speedFilter = 'all'
+              speedFilter =
+                'all'
             "
           >
             All
@@ -633,7 +732,8 @@ onUnmounted(() => {
                 'slow',
             }"
             @click="
-              speedFilter = 'slow'
+              speedFilter =
+                'slow'
             "
           >
             Slow
@@ -670,10 +770,6 @@ onUnmounted(() => {
           </button>
         </div>
 
-        <!-- ===================================================
-             STATES
-             =================================================== -->
-
         <div
           v-if="isLoading"
           class="vessel-directory-state"
@@ -693,54 +789,29 @@ onUnmounted(() => {
 
         <div
           v-else-if="
-            filteredVessels.length === 0
+            filteredVessels.length ===
+            0
           "
           class="vessel-directory-state"
         >
-          No vessels match the current
-          search and filters.
+          No vessels match the
+          current search and filters.
         </div>
 
         <template v-else>
-          <!-- =================================================
-               DESKTOP TABLE
-               ================================================= -->
-
           <div class="vessels-table-wrapper">
             <table class="vessels-table">
               <thead>
                 <tr>
-                  <th>
-                    Vessel
-                  </th>
-
-                  <th>
-                    MMSI
-                  </th>
-
-                  <th>
-                    Status
-                  </th>
-
-                  <th>
-                    Speed
-                  </th>
-
-                  <th>
-                    Type
-                  </th>
-
-                  <th>
-                    Course
-                  </th>
-
-                  <th>
-                    Position
-                  </th>
-
-                  <th>
-                    Updated
-                  </th>
+                  <th>Vessel</th>
+                  <th>MMSI</th>
+                  <th>Status</th>
+                  <th>Speed</th>
+                  <th>Type</th>
+                  <th>Course</th>
+                  <th>Position</th>
+                  <th>Updated</th>
+                  <th>Action</th>
                 </tr>
               </thead>
 
@@ -750,7 +821,9 @@ onUnmounted(() => {
                     vessel in
                     filteredVessels
                   "
-                  :key="vessel.mmsi"
+                  :key="
+                    vessel.mmsi
+                  "
                 >
                   <td>
                     <div class="vessel-name-cell">
@@ -886,14 +959,24 @@ onUnmounted(() => {
                       }}
                     </span>
                   </td>
+
+                  <td>
+                    <button
+                      class="view-on-map-button"
+                      type="button"
+                      @click="
+                        viewOnMap(
+                          vessel,
+                        )
+                      "
+                    >
+                      View on map
+                    </button>
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
-
-          <!-- =================================================
-               MOBILE CARDS
-               ================================================= -->
 
           <div class="vessel-mobile-list">
             <article
@@ -1046,6 +1129,21 @@ onUnmounted(() => {
                   }}°
                 </span>
               </div>
+
+              <button
+                class="
+                  view-on-map-button
+                  view-on-map-button--mobile
+                "
+                type="button"
+                @click="
+                  viewOnMap(
+                    vessel,
+                  )
+                "
+              >
+                View vessel on map
+              </button>
             </article>
           </div>
         </template>

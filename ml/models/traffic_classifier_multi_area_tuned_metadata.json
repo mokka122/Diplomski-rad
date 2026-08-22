@@ -1,0 +1,192 @@
+{
+  "candidate_id": "XGB_08",
+  "model_family": "XGBoost",
+  "parameters": {
+    "n_estimators": 400,
+    "learning_rate": 0.04,
+    "max_depth": 8,
+    "min_child_weight": 5,
+    "subsample": 0.9,
+    "colsample_bytree": 0.85
+  },
+  "selection_metric": "validation_macro_f1",
+  "validation_macro_f1": 0.612423525214966,
+  "test_metrics": {
+    "accuracy": 0.632442229270503,
+    "macro_precision": 0.6409439946558401,
+    "macro_recall": 0.6378689884475676,
+    "macro_f1": 0.6259511043955314,
+    "weighted_f1": 0.6292046172725142
+  },
+  "mean_area_test_macro_f1": 0.5508144778765623,
+  "per_area_test": {
+    "Bergen": {
+      "accuracy": 0.5079293158133212,
+      "macro_precision": 0.4744329508217211,
+      "macro_recall": 0.4742940643455081,
+      "macro_f1": 0.4538779637111028,
+      "weighted_f1": 0.4714904539438998
+    },
+    "Kristiansund": {
+      "accuracy": 0.49841413683733576,
+      "macro_precision": 0.49268977614702525,
+      "macro_recall": 0.40020166130245666,
+      "macro_f1": 0.3515695843083974,
+      "weighted_f1": 0.40723847883486647
+    },
+    "Stavanger": {
+      "accuracy": 0.5971907566832805,
+      "macro_precision": 0.5249241459274822,
+      "macro_recall": 0.5361692451227733,
+      "macro_f1": 0.5222870444857369,
+      "weighted_f1": 0.5825624879185319
+    },
+    "Tromsø": {
+      "accuracy": 0.7004984141368373,
+      "macro_precision": 0.647468116810196,
+      "macro_recall": 0.6509913862179882,
+      "macro_f1": 0.6480330387403158,
+      "weighted_f1": 0.6957563465216295
+    },
+    "Ålesund": {
+      "accuracy": 0.8581785228817399,
+      "macro_precision": 0.8130932161380878,
+      "macro_recall": 0.7598556347037887,
+      "macro_f1": 0.7783047581372585,
+      "weighted_f1": 0.8518186485704533
+    }
+  },
+  "test_confusion_matrix": [
+    [
+      2412,
+      500,
+      247
+    ],
+    [
+      1495,
+      1684,
+      614
+    ],
+    [
+      715,
+      485,
+      2883
+    ]
+  ],
+  "test_classification_report": {
+    "LOW": {
+      "precision": 0.5218520121159671,
+      "recall": 0.7635327635327636,
+      "f1-score": 0.6199717259992289,
+      "support": 3159.0
+    },
+    "MEDIUM": {
+      "precision": 0.6309479205695017,
+      "recall": 0.4439757447930398,
+      "f1-score": 0.5212008666047663,
+      "support": 3793.0
+    },
+    "HIGH": {
+      "precision": 0.7700320512820513,
+      "recall": 0.7060984570168993,
+      "f1-score": 0.7366807205825987,
+      "support": 4083.0
+    },
+    "accuracy": 0.632442229270503,
+    "macro avg": {
+      "precision": 0.6409439946558401,
+      "recall": 0.6378689884475676,
+      "f1-score": 0.6259511043955314,
+      "support": 11035.0
+    },
+    "weighted avg": {
+      "precision": 0.6511786891145515,
+      "recall": 0.632442229270503,
+      "f1-score": 0.6292046172725142,
+      "support": 11035.0
+    }
+  },
+  "study_areas": [
+    "Bergen",
+    "Kristiansund",
+    "Stavanger",
+    "Tromsø",
+    "Ålesund"
+  ],
+  "thresholds": {
+    "Bergen": {
+      "q90_raw": 2.0,
+      "high_threshold": 2
+    },
+    "Kristiansund": {
+      "q90_raw": 2.0,
+      "high_threshold": 2
+    },
+    "Stavanger": {
+      "q90_raw": 2.0,
+      "high_threshold": 2
+    },
+    "Tromsø": {
+      "q90_raw": 3.0,
+      "high_threshold": 3
+    },
+    "Ålesund": {
+      "q90_raw": 8.0,
+      "high_threshold": 8
+    }
+  },
+  "numeric_features": [
+    "total_events",
+    "arrivals",
+    "departures",
+    "unique_vessels",
+    "passenger_events",
+    "cargo_events",
+    "fishing_events",
+    "tanker_events",
+    "auxiliary_events",
+    "tug_events",
+    "hour_local",
+    "day_of_week",
+    "month",
+    "day_of_year",
+    "is_weekend",
+    "total_events_lag_1h",
+    "total_events_lag_2h",
+    "total_events_lag_3h",
+    "total_events_lag_6h",
+    "total_events_lag_24h",
+    "arrivals_lag_1h",
+    "arrivals_lag_2h",
+    "arrivals_lag_3h",
+    "arrivals_lag_24h",
+    "departures_lag_1h",
+    "departures_lag_2h",
+    "departures_lag_3h",
+    "departures_lag_24h",
+    "unique_vessels_lag_1h",
+    "unique_vessels_lag_24h",
+    "total_events_rolling_mean_3h",
+    "total_events_rolling_mean_6h",
+    "total_events_rolling_mean_24h",
+    "arrivals_rolling_mean_3h",
+    "arrivals_rolling_mean_6h",
+    "arrivals_rolling_mean_24h",
+    "hour_sin",
+    "hour_cos",
+    "day_of_week_sin",
+    "day_of_week_cos",
+    "month_sin",
+    "month_cos",
+    "centroid_lat",
+    "centroid_lon"
+  ],
+  "categorical_features": [
+    "study_area"
+  ],
+  "class_mapping": {
+    "LOW": 0,
+    "MEDIUM": 1,
+    "HIGH": 2
+  }
+}

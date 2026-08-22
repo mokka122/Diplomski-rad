@@ -1,5 +1,3 @@
-from typing import Any
-
 import numpy as np
 import pandas as pd
 
@@ -7,7 +5,7 @@ from app.ml.config import (
     FEATURE_COLUMNS,
     INVERSE_CLASS_MAPPING,
     PREDICTION_HORIZON_HOURS,
-    STUDY_AREA,
+    STUDY_AREA_DISPLAY_NAME,
 )
 
 from app.ml.model_loader import (
@@ -18,11 +16,12 @@ from app.ml.model_loader import (
 class ModelNotAvailableError(Exception):
     """
     Raised when prediction is requested before
-    a trained model is available.
+    the final trained model is available.
     """
 
 
 class TrafficPredictor:
+
     # ==================================================================================
     # INPUT PREPARATION
     # ==================================================================================
@@ -39,6 +38,7 @@ class TrafficPredictor:
         ]
 
         if missing_features:
+
             raise ValueError(
                 "Missing ML features: "
                 + ", ".join(
@@ -47,7 +47,10 @@ class TrafficPredictor:
             )
 
         ordered_features = {
-            feature: features[feature]
+            feature:
+                features[
+                    feature
+                ]
             for feature in FEATURE_COLUMNS
         }
 
@@ -69,21 +72,29 @@ class TrafficPredictor:
         features: dict,
     ) -> dict:
 
-        model = model_loader.get_model()
-
-        if model is None:
-            raise ModelNotAvailableError(
-                "Traffic prediction model is not available yet. "
-                "Complete the ML training phase and place "
-                "'traffic_classifier.joblib' in OceanEye/ml/models/."
-            )
-
-        input_dataframe = self.prepare_input(
-            features
+        model = (
+            model_loader
+            .get_model()
         )
 
-        prediction = model.predict(
-            input_dataframe
+        if model is None:
+
+            raise ModelNotAvailableError(
+                "Final OceanEye traffic prediction model "
+                "is not available. Expected model file: "
+                "'traffic_classifier_multi_area_tuned.joblib'."
+            )
+
+        input_dataframe = (
+            self.prepare_input(
+                features
+            )
+        )
+
+        prediction = (
+            model.predict(
+                input_dataframe
+            )
         )
 
         predicted_numeric = int(
@@ -93,7 +104,9 @@ class TrafficPredictor:
         traffic_level = (
             INVERSE_CLASS_MAPPING.get(
                 predicted_numeric,
-                str(predicted_numeric),
+                str(
+                    predicted_numeric
+                ),
             )
         )
 
@@ -127,7 +140,10 @@ class TrafficPredictor:
                 ),
             )
 
-            for class_value, probability in zip(
+            for (
+                class_value,
+                probability,
+            ) in zip(
                 model_classes,
                 probability_array,
             ):
@@ -157,11 +173,6 @@ class TrafficPredictor:
                 )
             )
 
-        metadata = (
-            model_loader.get_metadata()
-            or {}
-        )
-
         return {
             "traffic_level":
                 traffic_level,
@@ -179,12 +190,11 @@ class TrafficPredictor:
                 PREDICTION_HORIZON_HOURS,
 
             "study_area":
-                STUDY_AREA,
+                STUDY_AREA_DISPLAY_NAME,
 
             "model_name":
-                metadata.get(
-                    "selected_model"
-                ),
+                model_loader
+                .get_model_name(),
         }
 
 
