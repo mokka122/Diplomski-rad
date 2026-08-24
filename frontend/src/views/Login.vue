@@ -216,7 +216,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="login-footer-note">
-          Ålesund Maritime Area · Norway
+          Maritime Activity · Norway
         </div>
       </div>
 

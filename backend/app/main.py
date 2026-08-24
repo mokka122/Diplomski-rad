@@ -58,6 +58,9 @@ from app.api.vessels import (
     router as vessels_router,
 )
 
+from app.api.analytics import (
+    router as analytics_router
+)
 
 # ======================================================================================
 # DATABASE / INFRASTRUCTURE
@@ -93,6 +96,12 @@ from app.services.hourly_traffic_snapshot_service import (
 from app.services.kafka.kafka_consumer_service import (
     KafkaConsumerService,
 )
+
+from app.services.mongo_retention_service import (
+    mongo_retention_service,
+)
+
+
 
 
 logger = logging.getLogger(
@@ -163,6 +172,11 @@ hourly_snapshot_task: (
     | None
 ) = None
 
+mongo_retention_task: (
+    asyncio.Task
+    | None
+) = None
+
 
 # ======================================================================================
 # TASK CANCELLATION
@@ -209,6 +223,7 @@ async def lifespan(
     global kafka_consumer_service
     global kafka_consumer_task
     global hourly_snapshot_task
+    global mongo_retention_task
 
     # ==================================================================================
     # STARTUP
@@ -217,6 +232,29 @@ async def lifespan(
     logger.info(
         "Starting OceanEye backend..."
     )
+
+    # ----------------------------------------------------------------------------------
+    # MongoDB retention pre-start safety check
+    # ----------------------------------------------------------------------------------
+
+    logger.info(
+        "Checking MongoDB vessel-position retention before startup..."
+    )
+
+    await mongo_retention_service.check_once()
+
+    retention_startup_status = (
+        mongo_retention_service.get_status()
+    )
+
+    logger.info(
+        "MongoDB pre-start retention check completed | "
+        "documents=%s | deleted=%s | error=%s",
+        retention_startup_status["last_document_count"],
+        retention_startup_status["last_cleanup_deleted"],
+        retention_startup_status["last_error"],
+    )
+
 
     # ----------------------------------------------------------------------------------
     # MongoDB indexes
@@ -255,6 +293,17 @@ async def lifespan(
     )
 
     # ----------------------------------------------------------------------------------
+    # MongoDB vessel-position retention
+    # ----------------------------------------------------------------------------------
+
+    mongo_retention_task = (
+        asyncio.create_task(
+            mongo_retention_service.run(),
+            name="oceaneye-mongo-retention",
+        )
+    )
+
+    # ----------------------------------------------------------------------------------
     # BarentsWatch ingestion
     # ----------------------------------------------------------------------------------
 
@@ -284,6 +333,15 @@ async def lifespan(
         await stop_ingestion_service()
 
         # ----------------------------------------------------------------------------------
+        # Stop MongoDB retention service.
+        # ----------------------------------------------------------------------------------
+
+        await cancel_task(
+            mongo_retention_task,
+            "Mongo retention",
+        )
+
+        # ----------------------------------------------------------------------------------
         # Stop hourly snapshot.
         # ----------------------------------------------------------------------------------
 
@@ -301,6 +359,7 @@ async def lifespan(
             "Kafka consumer",
         )
 
+        mongo_retention_task = None
         hourly_snapshot_task = None
         kafka_consumer_task = None
         kafka_consumer_service = None
@@ -363,6 +422,10 @@ app.include_router(
 app.include_router(
     prediction_router
 )
+app.include_router(
+    analytics_router
+)
+
 
 app.include_router(
     traffic_router
@@ -371,6 +434,7 @@ app.include_router(
 app.include_router(
     auth_router
 )
+
 
 
 # ======================================================================================
@@ -466,12 +530,22 @@ async def pipeline_health_check():
         and not kafka_consumer_task.done()
     )
 
+    mongo_retention_running = (
+        mongo_retention_task is not None
+        and not mongo_retention_task.done()
+    )
+
     ingestion = (
         get_ingestion_status()
     )
 
     snapshot_status = (
         hourly_traffic_snapshot_service
+        .get_status()
+    )
+
+    retention_status = (
+        mongo_retention_service
         .get_status()
     )
 
@@ -483,6 +557,8 @@ async def pipeline_health_check():
                     kafka_running
                     and ingestion["running"]
                     and snapshot_status["running"]
+                    and mongo_retention_running
+                    and retention_status["running"]
                 )
                 else "degraded"
             ),
@@ -500,4 +576,7 @@ async def pipeline_health_check():
 
         "hourly_snapshot":
             snapshot_status,
+
+        "mongo_retention":
+            retention_status,
     }

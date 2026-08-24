@@ -637,7 +637,7 @@ onUnmounted(() => {
           </p>
 
           <h1>
-            Ålesund Maritime Area
+            Maritime monitoring
           </h1>
 
           <p class="dashboard-description">

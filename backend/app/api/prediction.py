@@ -73,15 +73,19 @@ async def predict_traffic(
     - MEDIUM
     - HIGH
 
-    Until the training phase is completed,
-    this endpoint intentionally returns HTTP 503.
+    Until the trained model is available,
+    this endpoint returns HTTP 503.
     """
 
     try:
+
         features = request.model_dump()
 
-        result = traffic_predictor.predict(
-            features
+        result = (
+            traffic_predictor
+            .predict(
+                features
+            )
         )
 
         return result
@@ -147,10 +151,12 @@ async def predict_live_traffic():
         45 ML features
             ->
         TrafficPredictor
-
-    Until a trained model exists, this endpoint
-    intentionally returns HTTP 503.
+            ->
+        XGBoost
+            ->
+        LOW / MEDIUM / HIGH
     """
+
     try:
 
         history_readiness = (
@@ -191,6 +197,17 @@ async def predict_live_traffic():
             await live_feature_builder
             .build_features()
         )
+
+        prediction = (
+            traffic_predictor
+            .predict(
+                live_data[
+                    "features"
+                ]
+            )
+        )
+
+        return prediction
 
     except HTTPException:
         raise
@@ -353,9 +370,8 @@ async def reload_prediction_model():
     """
     Reload the trained model from disk.
 
-    This endpoint is useful after the final ML training
-    phase because the backend does not have to be restarted
-    after traffic_classifier.joblib is created.
+    Useful when the model artifact has been created
+    or replaced without restarting the backend.
     """
 
     loaded = (
@@ -364,7 +380,8 @@ async def reload_prediction_model():
     )
 
     return {
-        "reloaded": loaded,
+        "reloaded":
+            loaded,
 
         "status":
             model_loader

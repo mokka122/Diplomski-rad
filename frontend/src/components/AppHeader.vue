@@ -60,11 +60,31 @@ onMounted(async () => {
         <img class="app-brand-logo" src="/logo.png" alt="OceanEye" />
       </RouterLink>
 
-      <nav class="desktop-navigation" aria-label="Primary navigation">
-        <RouterLink class="nav-link" to="/"> Dashboard </RouterLink>
+      <nav
+        class="desktop-navigation"
+        aria-label="Primary navigation"
+      >
+        <RouterLink
+          class="nav-link"
+          to="/"
+        >
+          Dashboard
+        </RouterLink>
 
-        <RouterLink class="nav-link" to="/all-ships"> All vessels </RouterLink>
-      </nav>
+        <RouterLink
+          class="nav-link"
+          to="/all-ships"
+        >
+          All vessels
+        </RouterLink>
+
+        <RouterLink
+          class="nav-link"
+          to="/analytics"
+        >
+          Analytics
+        </RouterLink>
+      </nav> 
 
       <div class="app-header-actions">
         <div class="live-indicator">
@@ -152,6 +172,15 @@ onMounted(async () => {
         <RouterLink class="mobile-nav-link" to="/all-ships" @click="closeMenu">
           All vessels
         </RouterLink>
+
+        <RouterLink
+          class="mobile-nav-link"
+          to="/analytics"
+          @click="closeMenu"
+        >
+          Analytics
+        </RouterLink>
+
         <button
           class="mobile-nav-link mobile-signout-button"
           type="button"

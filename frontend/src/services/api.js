@@ -1,35 +1,4 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  "/api";
-
-
-async function parseErrorResponse(
-  response,
-  fallbackMessage,
-) {
-  const data = await response
-    .json()
-    .catch(() => null);
-
-  const detail =
-    data?.detail;
-
-  if (typeof detail === "string") {
-    return detail;
-  }
-
-  if (
-    detail &&
-    typeof detail === "object"
-  ) {
-    return (
-      detail.message ||
-      fallbackMessage
-    );
-  }
-
-  return fallbackMessage;
-}
+const API_BASE_URL = "/api";
 
 
 export async function getCurrentVessels() {
@@ -39,10 +8,7 @@ export async function getCurrentVessels() {
 
   if (!response.ok) {
     throw new Error(
-      await parseErrorResponse(
-        response,
-        `Unable to load vessels (${response.status})`,
-      ),
+      `Neuspješno dohvaćanje plovila (${response.status})`,
     );
   }
 
@@ -55,17 +21,12 @@ export async function getVesselHistory(
   limit = 500,
 ) {
   const response = await fetch(
-    `${API_BASE_URL}/vessels/${encodeURIComponent(
-      mmsi,
-    )}/history?limit=${limit}`,
+    `${API_BASE_URL}/vessels/${encodeURIComponent(mmsi)}/history?limit=${limit}`,
   );
 
   if (!response.ok) {
     throw new Error(
-      await parseErrorResponse(
-        response,
-        `Unable to load vessel history (${response.status})`,
-      ),
+      `Neuspješno dohvaćanje povijesti plovila (${response.status})`,
     );
   }
 
@@ -80,10 +41,7 @@ export async function getCurrentTraffic() {
 
   if (!response.ok) {
     throw new Error(
-      await parseErrorResponse(
-        response,
-        `Unable to load current traffic (${response.status})`,
-      ),
+      `Neuspješno dohvaćanje podataka o prometu (${response.status})`,
     );
   }
 
@@ -98,10 +56,21 @@ export async function getPredictionStatus() {
 
   if (!response.ok) {
     throw new Error(
-      await parseErrorResponse(
-        response,
-        `Unable to load prediction status (${response.status})`,
-      ),
+      `Neuspješno dohvaćanje statusa predikcije (${response.status})`,
+    );
+  }
+
+  return response.json();
+}
+
+export async function getLivePrediction() {
+  const response = await fetch(
+    `${API_BASE_URL}/prediction/live`,
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Neuspješno dohvaćanje live predikcije (${response.status})`,
     );
   }
 
@@ -109,23 +78,16 @@ export async function getPredictionStatus() {
 }
 
 
-export async function getLivePrediction() {
+export async function getLiveAnalytics(
+  hours = 24,
+) {
   const response = await fetch(
-    `${API_BASE_URL}/prediction/live`,
+    `${API_BASE_URL}/analytics/live?hours=${encodeURIComponent(hours)}`,
   );
-
-  if (
-    response.status === 503
-  ) {
-    return null;
-  }
 
   if (!response.ok) {
     throw new Error(
-      await parseErrorResponse(
-        response,
-        `Unable to load live prediction (${response.status})`,
-      ),
+      `Neuspješno dohvaćanje analitike (${response.status})`,
     );
   }
 
