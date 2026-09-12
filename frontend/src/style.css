@@ -5676,3 +5676,22 @@ a {
     height: 280px;
   }
 }
+
+/* =========================================================
+   OCEANEYE MAP HEADER STACKING FIX
+   ========================================================= */
+
+.dashboard-panel {
+  position: relative;
+}
+
+.dashboard-panel-header {
+  position: relative;
+  z-index: 20;
+  background: var(--oe-surface);
+}
+
+.dashboard-map-wrapper {
+  position: relative;
+  z-index: 1;
+}
